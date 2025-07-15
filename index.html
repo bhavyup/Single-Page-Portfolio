@@ -2,19 +2,43 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Basic Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <!-- SEO Meta -->
+  <meta name="description" content="Bhavy Upreti's Developer Portfolio – full-stack web developer, Android enthusiast, DevOps learner." />
+  <meta name="keywords" content="Bhavy Upreti, Portfolio, Web Developer, Android Developer, MERN, JavaScript, Projects" />
+  <meta name="author" content="Bhavy Upreti" />
 
-    <title>Bhavy Upreti's Portfolio</title>
+  <!-- Open Graph Meta for Social Sharing -->
+  <meta property="og:title" content="Bhavy Upreti's Portfolio" />
+  <meta property="og:description" content="Creative full-stack developer with a passion for building scalable web & mobile apps." />
+  <meta property="og:image" content="https://bhavyup.github.io/My-Portfolio/assets/images/preview.png" />
+  <meta property="og:url" content="https://bhavyup.github.io/My-Portfolio" />
+  <meta property="og:type" content="website" />
+  
+  <!-- PWA & Tab Theme -->
+  <meta name="theme-color" content="#00ffff" />
 
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;700&family=Saira+Stencil+One&display=swap">
-    <link rel="shortcut icon" href="./logo/logo.svg" type="image/svg+xml">
+  <!-- Title -->
+  <title>Bhavy Upreti | Developer Portfolio</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="./logo/logo.svg" type="image/svg+xml" />
+
+  <!-- Preconnect to Fonts (Improves Performance) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;700&family=Saira+Stencil+One&display=swap" rel="stylesheet" />
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 
 <body id="top" class="dark_theme">
 
@@ -26,10 +50,6 @@
                 <a href="https://github.com/bhavyup">Bhavy<span>.</span></a>
             </h1>
             <div class="navbar-actions">
-                <select name="language" id="lang">
-                    <option value="en">En</option>
-                    <option value="ar">Hi</option>
-                </select>
 
                 <button class="theme-btn" aria-label="Change Theme" title="Change Theme" data-theme-btn>
                     <span class="icon"></span>
@@ -42,30 +62,16 @@
                 <span class="three"></span>
             </button>
 
-            <nav class="navbar" data-navbar>
+            <nav class="navbar" data-navbar role="navigation" aria-label="Primary Navigation">
                 <ul class="navbar-list">
-
-                    <li>
-                        <a href="#home" class="navbar-link">Home</a>
-                    </li>
-
-                    <li>
-                        <a href="#about" class="navbar-link">About</a>
-                    </li>
-
-                    <li>
-                        <a href="#skills" class="navbar-link">Skills</a>
-                    </li>
-
-                    <li>
-                        <a href="#portfolio" class="navbar-link">Portfolio</a>
-                    </li>
-
-                    <li>
-                        <a href="#contact" class="navbar-link">Contact</a>
-                    </li>
+                    <li><a href="#home" class="navbar-link" aria-label="Go to Home section">Home</a></li>
+                    <li><a href="#about" class="navbar-link" aria-label="Go to About section">About</a></li>
+                    <li><a href="#skills" class="navbar-link" aria-label="Go to Skills section">Skills</a></li>
+                    <li><a href="#projects" class="navbar-link" aria-label="Go to Projects section">Projects</a></li>
+                    <li><a href="#contact" class="navbar-link" aria-label="Go to Contact section">Contact</a></li>
                 </ul>
             </nav>
+
         </div>
     </header>
 
@@ -110,7 +116,8 @@
                 <a href="#stats" class="scroll-down">Scroll</a>
             </section>
 
-            <section class="about" id="about">
+
+            <section class="about two" id="about">
                 <div class="about-wrapper">
                     <figure class="about-banner">
                         <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2tuYXg5dDZ2b2h6aWJweHNnc3U3bjRuamdrOWZvbm00MWlta21rdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bGgsc5mWoryfgKBx1u/giphy.gif"
@@ -200,13 +207,9 @@
                         </div>
             
                         <div class="btn-group">
-                            <button>
-                                <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" class="btn btn-secondary">Hire me</a>
-                            </button>
-            
-                            <button>
-                                <a href="./assets/resume/NoLC Resume.pdf" class="btn btn-primary" download>Download cv</a>
-                            </button>
+                            <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" class="btn btn-secondary">Hire me</a>
+                        
+                            <a href="./assets/resume/NoLC Resume.pdf" class="btn btn-primary" download>Download CV</a>
                         </div>
                     </div>
                 </div>
@@ -215,7 +218,7 @@
 
             <!--#SKILLS-->
 
-            <section class="skills" id="skills">
+            <section class="skills two bg-greenish" id="skills">
                 <div class="skills-content section-content">
                     <p class="section-subtitle">My skills</p>
                     <h3 class="h3 section-title">My Programming Skills</h3>
@@ -542,7 +545,7 @@
         - #PROJECTS
       -->
 
-            <section class="project" id="portfolio">
+            <section class="project two" id="portfolio">
 
                 <ul id="project-lists" class="project-list">
 
@@ -607,7 +610,7 @@
         - #CONTACT
       -->
 
-            <section class="contact" id="contact">
+            <section class="contact two" id="contact">
 
                 <div class="contact-content section-content">
 
@@ -774,7 +777,7 @@
     - #FOOTER
   -->
 
-    <footer class="footer">
+    <footer class="footer two">
         <div class="container">
 
             <p class="h1 logo">
