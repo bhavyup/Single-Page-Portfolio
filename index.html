@@ -2,816 +2,845 @@
 <html lang="en">
 
 <head>
-  <!-- Basic Meta -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  
-  <!-- SEO Meta -->
-  <meta name="description" content="Bhavy Upreti's Developer Portfolio – full-stack web developer, Android enthusiast, DevOps learner." />
-  <meta name="keywords" content="Bhavy Upreti, Portfolio, Web Developer, Android Developer, MERN, JavaScript, Projects" />
-  <meta name="author" content="Bhavy Upreti" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <!-- Open Graph Meta for Social Sharing -->
-  <meta property="og:title" content="Bhavy Upreti's Portfolio" />
-  <meta property="og:description" content="Creative full-stack developer with a passion for building scalable web & mobile apps." />
-  <meta property="og:image" content="https://bhavyup.github.io/My-Portfolio/assets/images/preview.png" />
-  <meta property="og:url" content="https://bhavyup.github.io/My-Portfolio" />
-  <meta property="og:type" content="website" />
-  
-  <!-- PWA & Tab Theme -->
-  <meta name="theme-color" content="#00ffff" />
+  <!-- SEO -->
+  <title>Bhavy Upreti — Full-Stack Developer</title>
+  <meta name="description"
+    content="Full-stack developer crafting clean, creative, and impactful digital experiences. Specializing in web development, Android, and cloud technologies.">
+  <meta name="keywords"
+    content="Bhavy Upreti, Portfolio, Full-Stack Developer, Web Developer, React, Node.js, JavaScript">
+  <meta name="author" content="Bhavy Upreti">
 
-  <!-- Title -->
-  <title>Bhavy Upreti | Developer Portfolio</title>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Bhavy Upreti — Full-Stack Developer">
+  <meta property="og:description" content="Crafting clean, creative, and impactful digital experiences.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bhavyup.github.io/My-Portfolio">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#0D0D0C">
 
   <!-- Favicon -->
-  <link rel="icon" href="./logo/logo.svg" type="image/svg+xml" />
-
-  <!-- Preconnect to Fonts (Improves Performance) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="./logo/logo.png" type="image/png">
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;700&family=Saira+Stencil+One&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@400&family=Sora:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap"
+    rel="stylesheet">
 
-  <!-- Main Styles -->
-  <link rel="stylesheet" href="./styles.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+  <script src="https://kit.fontawesome.com/84aa792419.js" crossorigin="anonymous"></script>
 </head>
 
+<body>
+  <!-- Film grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
 
-<body id="top" class="dark_theme">
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
 
-    <!--Header-->
-    <header class="header" data-header>
+  <!-- ========== NAVIGATION ========== -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#hero" class="nav__logo" aria-label="Back to top">B<span class="accent-dot">.</span></a>
 
-        <div class="container">
-            <h1 class="h1 logo">
-                <a href="https://github.com/bhavyup">Bhavy<span>.</span></a>
-            </h1>
-            <div class="navbar-actions">
+      <nav class="nav__links" id="navLinks">
+        <a href="#origin" class="nav__link">Origin</a>
+        <a href="#about" class="nav__link">About</a>
+        <a href="#skills" class="nav__link">Expertise</a>
+        <a href="#work" class="nav__link">Work</a>
+        <a href="#journey" class="nav__link">Journey</a>
+        <a href="#contact" class="nav__link">Contact</a>
+      </nav>
 
-                <button class="theme-btn" aria-label="Change Theme" title="Change Theme" data-theme-btn>
-                    <span class="icon"></span>
-                </button>
+      <div class="nav__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+
+        <button class="nav__burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-menu__nav">
+      <a href="#origin" class="mobile-menu__link">Origin</a>
+      <a href="#about" class="mobile-menu__link">About</a>
+      <a href="#skills" class="mobile-menu__link">Expertise</a>
+      <a href="#work" class="mobile-menu__link">Work</a>
+      <a href="#journey" class="mobile-menu__link">Journey</a>
+      <a href="#contact" class="mobile-menu__link">Contact</a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <a href="https://github.com/bhavyup" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://instagram.com/bhavy_upreti" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+      <div class="hero__grid-bg" aria-hidden="true"></div>
+      <div class="hero__glow" aria-hidden="true"></div>
+
+      <div class="hero__container">
+        <p class="hero__eyebrow" data-reveal>
+          <span>Full-Stack Developer</span>
+          <span class="hero__eyebrow-sep">&amp;</span>
+          <span>Creative Engineer</span>
+        </p>
+
+        <h1 class="hero__title" data-reveal data-delay="1">
+          <span class="hero__title-line hero__title-line--clip">Bhavy</span>
+          <span class="hero__title-line hero__title-line--clip hero__title-line--accent">Upreti</span>
+        </h1>
+
+        <div class="hero__divider" data-reveal data-delay="2"></div>
+
+        <p class="hero__tagline" data-reveal data-delay="3">
+          Designing &amp; building clean, creative,<br>
+          and impactful digital experiences.
+        </p>
+
+        <div class="hero__actions" data-reveal data-delay="4">
+          <a href="#work" class="btn btn--primary">
+            <span>View Work</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+          <a href="./assets/resume/NoLC Resume.pdf" class="btn btn--ghost" download>
+            <span>Resume</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="hero__stats" data-reveal data-delay="5">
+          <div class="hero__stat">
+            <span class="hero__stat-num">3+</span>
+            <span class="hero__stat-label">Years Building</span>
+          </div>
+          <div class="hero__stat-divider" aria-hidden="true"></div>
+          <div class="hero__stat">
+            <span class="hero__stat-num">10+</span>
+            <span class="hero__stat-label">Projects Shipped</span>
+          </div>
+          <div class="hero__stat-divider" aria-hidden="true"></div>
+          <div class="hero__stat">
+            <span class="hero__stat-num">5+</span>
+            <span class="hero__stat-label">Tech Stacks</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__social" data-reveal data-delay="5">
+        <a href="https://github.com/bhavyup" target="_blank" rel="noopener" aria-label="GitHub">
+          <span class="hero__social-text">GH</span>
+          <i class="hero__social-icon fa-brands fa-github" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/bhavy-upreti" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <span class="hero__social-text">LI</span>
+          <i class="hero__social-icon fa-brands fa-linkedin-in" aria-hidden="true"></i>
+        </a>
+        <a href="https://instagram.com/bhavy_upreti" target="_blank" rel="noopener" aria-label="Instagram">
+          <span class="hero__social-text">IG</span>
+          <i class="hero__social-icon fa-brands fa-instagram" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="hero__scroll" data-reveal data-delay="5">
+        <span>Scroll</span>
+        <div class="scroll-line">
+          <div class="scroll-line__fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ORIGIN 3D STORY ========== -->
+    <section class="section origin" id="origin">
+      <div class="container origin__intro" data-reveal>
+        <span class="section__number">00</span>
+        <h2 class="section__title origin__title">Rise Sequence</h2>
+        <p class="origin__lede">
+          Scroll to power up the scene. The skyline bends, the shards align, and the emblem charges like a superhero
+          origin montage.
+        </p>
+      </div>
+
+      <div class="origin__track" aria-hidden="true">
+        <div class="origin__sticky" id="originScene">
+          <div class="origin__atmosphere"></div>
+          <div class="origin__rings"></div>
+          <div class="origin__city origin__city--far"></div>
+          <div class="origin__city origin__city--near"></div>
+
+          <div class="origin__emblem-wrap">
+            <div class="origin__emblem"></div>
+            <span class="origin__charge" id="originCharge">0%</span>
+          </div>
+
+          <div class="origin__cards">
+            <article class="origin-card origin-card--one">
+              <p class="origin-card__kicker">Phase 01</p>
+              <h3>Signal Ignition</h3>
+              <p>Raw idea turns into pulse and direction.</p>
+            </article>
+            <article class="origin-card origin-card--two">
+              <p class="origin-card__kicker">Phase 02</p>
+              <h3>Armor Assembly</h3>
+              <p>Design, code and systems lock into one frame.</p>
+            </article>
+            <article class="origin-card origin-card--three">
+              <p class="origin-card__kicker">Phase 03</p>
+              <h3>Skyline Launch</h3>
+              <p>Every pixel moves with purpose under scroll force.</p>
+            </article>
+            <article class="origin-card origin-card--four">
+              <p class="origin-card__kicker">Phase 04</p>
+              <h3>Hero Mode</h3>
+              <p>Experience becomes cinematic and unmistakably yours.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section class="section about" id="about">
+      <div class="container">
+        <div class="section__header" data-reveal>
+          <span class="section__number">01</span>
+          <h2 class="section__title">About</h2>
+        </div>
+
+        <div class="about__grid">
+          <blockquote class="about__quote" data-reveal>
+            "Write code that's not just smart, but kind — to users, to future devs, and to your future self."
+          </blockquote>
+
+          <div class="about__content" data-reveal>
+            <p class="about__intro">
+              Hey, I'm Bhavy — a final-year Computer Science Engineering student
+              with a passion for building clean, creative, and impactful software.
+              I thrive in solving real-world problems through code, from crafting minimal
+              front-end experiences to diving deep into backend systems.
+            </p>
+
+            <p class="about__text">
+              My interests span <strong>full-stack web development, DevOps practices,
+                and cloud technologies</strong>. I believe great tech is built not just with
+              code, but with curiosity, collaboration, and consistency.
+            </p>
+
+            <div class="about__columns">
+              <div class="about__col">
+                <h3 class="about__col-title">What I Do</h3>
+                <ul class="about__list">
+                  <li>Full-stack web development (MERN)</li>
+                  <li>Responsive &amp; intuitive interfaces</li>
+                  <li>Backend APIs with Node.js &amp; Express</li>
+                  <li>Android development with Java</li>
+                  <li>DevOps, CI/CD &amp; cloud pipelines</li>
+                </ul>
+              </div>
+              <div class="about__col">
+                <h3 class="about__col-title">Beyond Code</h3>
+                <ul class="about__list">
+                  <li>Crafting the perfect coding playlist</li>
+                  <li>Sci-fi, philosophy &amp; rabbit holes</li>
+                  <li>Fueled by unhealthy levels of caffeine</li>
+                  <li>Organizing things that don't need it</li>
+                  <li>Gaming (badly, but with passion)</li>
+                </ul>
+              </div>
             </div>
 
-            <button class="nav-toggle-btn" aria-label="Toggle Menu" title="Toggle Menu" data-nav-toggle-btn>
-                <span class="one"></span>
-                <span class="two"></span>
-                <span class="three"></span>
-            </button>
-
-            <nav class="navbar" data-navbar role="navigation" aria-label="Primary Navigation">
-                <ul class="navbar-list">
-                    <li><a href="#home" class="navbar-link" aria-label="Go to Home section">Home</a></li>
-                    <li><a href="#about" class="navbar-link" aria-label="Go to About section">About</a></li>
-                    <li><a href="#skills" class="navbar-link" aria-label="Go to Skills section">Skills</a></li>
-                    <li><a href="#projects" class="navbar-link" aria-label="Go to Projects section">Projects</a></li>
-                    <li><a href="#contact" class="navbar-link" aria-label="Go to Contact section">Contact</a></li>
-                </ul>
-            </nav>
-
+            <div class="about__actions">
+              <a href="https://www.linkedin.com/in/bhavy-upreti" class="btn btn--primary" target="_blank"
+                rel="noopener">
+                <span>Hire Me</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </a>
+              <a href="./assets/resume/NoLC Resume.pdf" class="btn btn--ghost" download>
+                <span>Download CV</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
-    </header>
-
-    <main>
-        <article class="container">
-            <!--#HERO-->
-
-            <section class="hero" id="home">
-
-                <figure class="hero-banner">
-                    <img id="theme-banner" src="https://i.gifer.com/1zLe.gif" class="w-100">
-                </figure>
-
-                <div class="hero-content">
-                    <h2 class="h2 hero-title">We Design & Build Creative Products</h2>
-                    <a href="#contact" class="btn btn-primary">Get in touch</a>
-                </div>
-
-                <ul class="hero-social-list">
-                    <li>
-                        <a href="https://github.com/bhavyup" class="hero-social-link">
-                            <ion-icon name="logo-github"></ion-icon>
-                            <div class="tooltip">Github</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="https://instagram.com/bhavy_upreti" class="hero-social-link">
-                            <ion-icon name="logo-instagram"></ion-icon>
-                            <div class="tooltip">Instagram</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" class="hero-social-link">
-                            <ion-icon name="logo-linkedin"></ion-icon>
-                            <div class="tooltip">Linkedin</div>
-                        </a>
-                    </li>
-                </ul>
-
-                <a href="#stats" class="scroll-down">Scroll</a>
-            </section>
-
-
-            <section class="about two" id="about">
-                <div class="about-wrapper">
-                    <figure class="about-banner">
-                        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2tuYXg5dDZ2b2h6aWJweHNnc3U3bjRuamdrOWZvbm00MWlta21rdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bGgsc5mWoryfgKBx1u/giphy.gif"
-                            alt="coding Doodle" id="about-photo" class="w-100">
-                    </figure>
-            
-                    <div class="about-content section-content">
-                        <div class="about-content-wrapper">
-            
-                            <p class="section-subtitle">About me</p>
-                            <h3 class="h3 section-title">Full-Stack Developer | Android Developer | Web Developer</h3>
-                            <div class="me">
-                                <p class="section-text">Hey there! I'm Bhavy Upreti, a final-year Computer Science Engineering
-                                    student
-                                    with a passion for building clean, creative, and impactful software.<br>
-                                    <br>
-                                    I thrive in solving real-world problems through code — from crafting minimal front-end
-                                    experiences
-                                    to diving deep into backend systems. My interests lie in <strong>full-stack web development,
-                                        DevOps
-                                        practices, and cloud technologies</strong>. I believe that great tech is built not just with
-                                    code, but with curiosity, collaboration, and consistency.
-                                </p>
-                                <h5 class="h5 section-title stack">🛠️ What I Love Working With:</h5>
-                                <ul class="about-sub">
-                                    <li>
-                                        <p class="section-text">Frontend: HTML, CSS, JavaScript, React</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">Backend: Node.js, Express, MongoDB</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">DevOps & Cloud: GitHub Actions, Netlify, Vercel, (and learning
-                                            Docker &
-                                            AWS)</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">Mobile: Android Development with Kotlin</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">Tools: Figma, Postman, VS Code, Git</p>
-                                    </li>
-                                </ul>
-                                <h5 class="h5 section-title stack">🎯 My Goals:</h5>
-                                <ul class="section-text about-sub">
-                                    <li>
-                                        <p class="section-text">🚀 Build scalable and maintainable real-world web apps</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">☁️ Master cloud deployments and CI/CD workflows</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">🧑‍🤝‍🧑 Contribute to open source and join collaborative tech teams
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">📚 Never stop learning — system design, architecture, and more</p>
-                                    </li>
-                                </ul>
-                                <h5 class="h5 section-title stack">🧠 My Philosophy:</h5>
-                                <blockquote>
-                                    <p class="section-text quote">“Write code that’s not just smart, but kind — to users, to future
-                                        devs, and to your future self.”</p>
-                                </blockquote>
-                                <h5 class="h5 section-title stack">🤖 Outside of Tech:</h5>
-                                <p class="section-text">When I’m not knee-deep in code or cloud configs, I’m usually:</p>
-                                <ul class="about-sub">
-                                    <li>
-                                        <p class="section-text" id="sci-fi">🎧 Crafting the perfect playlist to vibe or code to</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">📚 Watching sci-fi, philosophy, or random Wikipedia rabbit holes</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">☕ Fueling my brain with unhealthy levels of caffeine</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">🧠 Organizing things that don’t need organizing</p>
-                                    </li>
-                                    <li>
-                                        <p class="section-text">🎮 Gaming (badly, but with passion)</p>
-                                    </li>
-                                </ul>
-                                <p class="section-text">Creativity doesn't stop at the IDE — I like to build, explore, and overthink
-                                    everything.</p>
-                            </div>
-                        </div>
-            
-                        <div class="btn-group">
-                            <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" class="btn btn-secondary">Hire me</a>
-                        
-                            <a href="./assets/resume/NoLC Resume.pdf" class="btn btn-primary" download>Download CV</a>
-                        </div>
-                    </div>
-                </div>
-            
-            </section>
-
-            <!--#SKILLS-->
-
-            <section class="skills two bg-greenish" id="skills">
-                <div class="skills-content section-content">
-                    <p class="section-subtitle">My skills</p>
-                    <h3 class="h3 section-title">My Programming Skills</h3>
-
-                    <div class="toggle-paragraphs">
-                        
-                        <div id="skills-paragraph">
-                            <p class="section-text">Here's what I bring to the table (besides ☕):</p>
-                            <ul class="skills-sub">
-                                <li>Full-stack web development using MERN & modern JS frameworks</li>
-                                <li>Crafting responsive and intuitive user interfaces</li>
-                                <li>Clean backend APIs with Node.js & Express</li>
-                                <li>Strong foundation in data structures and problem-solving</li>
-                                <li>Currently exploring DevOps, CI/CD, and system design</li>
-                            </ul>
-                        </div>
-
-                        <div id="tools-paragraph">
-                            <p class="section-text">Some of the tools and tech I use daily:</p>
-                            <ul class="skills-sub">
-                                <li>VS Code, Postman, Git & GitHub</li>
-                                <li>Netlify, Vercel, GitHub Actions</li>
-                                <li>Figma (for UI prototyping)</li>
-                                <li>Terminal, npm, and sometimes Webpack</li>
-                                <li>Learning Docker, Firebase, and cloud workflows</li>
-                            </ul>
-                        </div>
-
-                        <div id="language-paragraph">
-                            <p class="section-text">Languages I work comfortably with:</p>
-                            <ul class="skills-sub">
-                                <li>JavaScript (main driver)</li>
-                                <li>Java (academic + Android)</li>
-                                <li>C & C++ (problem solving and systems basics)</li>
-                                <li>Python (scripting and tools)</li>
-                                <li>HTML & CSS (of course)</li>
-                            </ul>
-                        </div>
-                        
-                    </div>
-
-
-                    <div class="skills-toggle" data-toggle-box>
-                        <button class="toggle-btn" data-toggle-btn>👨‍💻Skills</button>
-                        <button class="toggle-btn" id="1" data-toggle-btn>💻Tools</button>
-                        <button class="toggle-btn active" data-toggle-btn>🧑‍💻Languages</button>
-                        <div class="toggle-indicator"></div>
-                    </div>
-                </div>
-
-
-
-                <div class="skills-box" data-skills-box>
-
-                    <!--Skill Cards--->
-
-                    <ul class="skills-list">
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">jQuery</div>
-                                <div class="card-icon">
-                                    <img height="80" width="60" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jquery/jquery-plain-wordmark.svg"/>
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Express</div>
-                                <div class="card-icon">
-                                    <img height="80" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Angular</div>
-                                <div class="card-icon">
-                                    <img height="80" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">React</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Node.js</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-plain-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Spring</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Android</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-original-wordmark.svg" alt="Android logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">AWS</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-
-
-                    <!--Tools List-->
-
-                    <ul class="tools-list">
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">VS Code</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original-wordmark.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Git</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original-wordmark.svg" alt="Git logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">GitHub</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original-wordmark.svg" alt="GitHub logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">AndroidStudio</div>
-
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg" alt="Android Studio logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">npm</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg" alt="npm logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Docker</div>
-
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original-wordmark.svg" alt="Docker logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">FireBase</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg" alt="firebase logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Figma</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="Figma logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Bash</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg" alt="Bash logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Vercel</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel logo">
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-
-                    <!--Langauges Cards List-->
-
-                    <ul class="languages-list">
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">HTML</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">CSS3</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Java</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">JavaScript</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">C</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" alt="C logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">C++</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" alt="C++ logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">Python</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">XML</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/xml/xml-original.svg" alt="XML logo">
-                                </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div class="skill-card">
-                                <div class="tooltip">SQL</div>
-                                <div class="card-icon">
-                                    <img height="60" width="80" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqldeveloper/sqldeveloper-original.svg" />
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-
-
-                </div>
-
-            </section>
-
-            <!-- 
-        - #PROJECTS
-      -->
-
-            <section class="project two" id="portfolio">
-
-                <ul id="project-lists" class="project-list">
-
-                    <li>
-                        <div class="project-content section-content">
-                            <p class="section-subtitle">My Works</p>
-                            <h3 class="h3 section-title">See My Works Which Will Amaze You!</h3>
-                            <h5 class="h5 section-description">Click on the Project Icon find the deployment or hover to find the repo.</h5>
-                        </div>
-                    </li>
-
-                    <li>
-                        <a href="https://calculator-bhavy.netlify.app" target="_blank">
-                            <div class="project-card">
-                                <figure class="card-banner">
-                                    <img src="./assets/images/Calculator.png" class="w-100" alt="A macintosh on a yellow background.">
-                                </figure>
-                                <div class="card-content">
-                                    <h3 class="h4 card-title">Calculator</h3>
-                                    <button class="card-title" onclick="window.open('https://github.com/bhavyup/Calculator', '_blank')"
-                                        title="View Source Code on GitHub">
-                                        <ion-icon class="project-icons" name="logo-github"></ion-icon>
-                                    </button>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-
-                    <li>
-                        <a href="https://bhavyup.github.io/My-Portfolio/" target="_blank">
-                            <div class="project-card">
-                                <figure class="card-banner">
-                                    <img src="./assets/images/Portfolio.png" class="w-100" alt="A macintosh on a yellow background.">
-                                </figure>
-                                <div class="card-content">
-                                    <h3 class="h4 card-title">Portfolio</h3>
-                                    <button class="card-title" onclick="window.open('https://github.com/bhavyup/My-Portfolio', '_blank')"
-                                        title="View Source Code on GitHub">
-                                        <ion-icon class="project-icons" name="logo-github"></ion-icon>
-                                    </button>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-
-                <div id="read-card" class="project-card">
-                   
-                        <figure class="card-banner" id="read-more">
-                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTQ5YWoyd2I0dWN6amRncmxmcmh2cmk2amhwN2k0b2JpM3IxaTM0YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jpECID52EQVNrECYcB/giphy.gif"
-                                alt="Other Projects" class="w-100">
-                             <a href="https://github.com/bhavyup?tab=repositories"><figcaption class="overlay-text">Read More</figcaption></a>
-                        </figure>
-                    
-                </div>
-
-            </section>
-
-
-            <!-- 
-        - #CONTACT
-      -->
-
-            <section class="contact two" id="contact">
-
-                <div class="contact-content section-content">
-
-                    <p class="section-subtitle">Contact Me!</p>
-
-                    <h2 class="h3 section-title">Do You Have Any Crazy Project? Please Drop a Message</h2>
-
-                    <p class="section-text">
-                        Get in touch and let me know how i can help. Fill out the form and i’ll be in touch as soon as
-                        possible.
-                    </p>
-
-                    <ul class="contact-list">
-
-                        <li class="contact-list-item">
-                            <div class="contact-item-icon">
-                                <ion-icon name="location-outline"></ion-icon>
-                            </div>
-                            <div class="wrapper">
-                                <h3 class="h4 contact-item-title">Address:</h3>
-                                <address class="contact-info">
-                                    Nainital, Uttarakhand
-                                </address>
-                            </div>
-                        </li>
-
-                        <li class="contact-list-item">
-                            <div class="contact-item-icon">
-                                <ion-icon name="logo-whatsapp"></ion-icon>
-                            </div>
-                            <div class="wrapper">
-                                <h3 class="h4 contact-item-title">Whatsapp:</h3>
-                                <a href="https://wa.me/917457032226?text=Hello" class="contact-info">+91 7457032226</a>
-                            </div>
-                        </li>
-
-                        <li class="contact-list-item">
-                            <div class="contact-item-icon">
-                                <ion-icon name="mail-outline"></ion-icon>
-                            </div>
-                            <div class="wrapper">
-                                <h3 class="h4 contact-item-title">Email:</h3>
-                                <a href="mailto:bhavyupreti83@gmail.com" class="contact-info">bhavyupreti83@gmail.com</a>
-                            </div>
-
-                        </li>
-
-                        <li>
-                            <ul class="contac-social-list">
-                                <li>
-                                    <a href="https://www.facebook.com/share/16tSbr7rgr/" class="contact-social-link">
-                                        <div class="tooltip">Facebook</div>
-                                        <ion-icon name="logo-facebook"></ion-icon>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="https://instagram.com/bhavy_upreti" class="contact-social-link">
-                                        <div class="tooltip">Instagram</div>
-                                        <ion-icon name="logo-instagram"></ion-icon>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="https://www.linkedin.com/in/bhavy-upreti-123456789/" class="contact-social-link">
-                                        <div class="tooltip">Linkedin</div>
-                                        <ion-icon name="logo-linkedin"></ion-icon>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="https://github.com/bhavyup" class="contact-social-link">
-                                        <div class="tooltip">Github</div>
-
-                                        <ion-icon name="logo-github"></ion-icon>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-
-                <form action="https://formspree.io/f/mjkrqowz" method="post" class="contact-form" id="contactForm">
-
-                    <div class="form-wrapper">
-                        <label for="name" class="form-label">Name</label>
-                        <div class="input-wrapper">
-                            <input type="text" name="name" id="name" required placeholder="e.g Jason Hunts" class="input-field">
-                            <ion-icon name="person-circle"></ion-icon>
-                        </div>
-                    </div>
-                    
-                    <div class="form-wrapper">
-                        <label for="email" class="form-label">Email</label>
-                        <div class="input-wrapper">                    
-                            <input type="email" name="email" id="email" required placeholder="e.g abc@mail.com" class="input-field">                   
-                            <ion-icon name="mail"></ion-icon>                   
-                        </div>            
-                    </div>
-
-                    <div class="form-wrapper">
-                        <label for="phone" class="form-label">Phone</label>
-                        <div class="input-wrapper">
-                            <input type="tel" name="phone" id="phone" placeholder="Phone Number"
-                                class="input-field">
-                            <ion-icon name="call"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="form-wrapper">
-                        <label for="message" class="form-label">Message</label>
-                        <div class="input-wrapper">
-                          <textarea name="message" id="message" required placeholder="Write message..."
-                                class="input-field"></textarea>
-                            <ion-icon name="chatbubbles"></ion-icon>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Send</button>
-                    <div id="formResponse" style="margin-top: 10px;"></div>
-                    
-                    <script>
-                        const form = document.getElementById("contactForm");
-                        const formResponse = document.getElementById("formResponse");
-
-                        form.addEventListener("submit", function (e) {
-                            e.preventDefault(); // prevent normal form submission
-
-                            const data = new FormData(form);
-
-                            fetch(form.action, {
-                                method: form.method,
-                                body: data,
-                                headers: {
-                                    'Accept': 'application/json'
-                                }
-                            })
-                                .then(response => {
-                                    if (response.ok) {
-                                        form.reset(); // ✅ Reset the form
-                                        formResponse.innerHTML = "<span style='color: green;'>✅ Message sent successfully!</span>";
-                                    } else {
-                                        return response.json().then(data => {
-                                            formResponse.innerHTML = "<span style='color: red;'>❌ " + (data.error || "Something went wrong.") + "</span>";
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    formResponse.innerHTML = "<span style='color: red;'>❌ Network error. Try again later.</span>";
-                                });
-                        });
-                    </script>
-
-                </form>
-
-            </section>
-
-        </article>
-    </main>
-
-    <!-- 
-    - #FOOTER
-  -->
-
-    <footer class="footer two">
-        <div class="container">
-
-            <p class="h1 logo">
-                <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331">
-                    Coding With <span>Bhavy</span>
+      </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section class="section skills" id="skills">
+      <div class="container">
+        <div class="section__header" data-reveal>
+          <span class="section__number">02</span>
+          <h2 class="section__title">Expertise</h2>
+        </div>
+      </div>
+
+      <!-- Infinite scrolling marquee -->
+      <div class="marquee" data-reveal aria-label="Technologies I work with">
+        <div class="marquee__track">
+          <span class="marquee__item">JavaScript</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">React</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Node.js</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Java</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Python</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Angular</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Express</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">MongoDB</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Docker</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">AWS</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Kotlin</span><span class="marquee__sep">/</span>
+          <span class="marquee__item">Git</span><span class="marquee__sep">/</span>
+          <!-- Duplicate for seamless loop -->
+          <span class="marquee__item" aria-hidden="true">JavaScript</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">React</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Node.js</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Java</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Python</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Angular</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Express</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">MongoDB</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Docker</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">AWS</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Kotlin</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+          <span class="marquee__item" aria-hidden="true">Git</span><span class="marquee__sep"
+            aria-hidden="true">/</span>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="skills__grid">
+          <div class="skill-group" data-reveal>
+            <h3 class="skill-group__title">Languages</h3>
+            <ul class="skill-group__list">
+              <li><span>JavaScript</span><i class="skill-group__icon fa-brands fa-square-js"></i></li>
+              <li><span>Java</span><i class="skill-group__icon fa-brands fa-java"></i></li>
+              <li><span>C / C++</span><i><i class="skill-group__icon devicon-c-original colored"></i><i
+                    class="skill-group__icon devicon-cplusplus-plain colored"></i></i></li>
+              <li><span>Python</span><i class="skill-group__icon fa-brands fa-python"></i></li>
+              <li><span>HTML &amp; CSS</span><i class="skill-group__icon fa-brands fa-html5"></i></li>
+              <li><span>SQL</span><i class="skill-group__icon fa-solid fa-database"></i></li>
+              <li><span>CSS</span><i class="skill-group__icon fa-brands fa-css3-alt"></i></li>
+              <li><span>Kotlin</span><i class="skill-group__icon devicon-kotlin-plain colored"></i></li>
+              <li><span>TypeScript</span><i class="skill-group__icon fa-brands fa-typescript"></i></li>
+              <li><span>XML</span><i class="skill-group__icon devicon-xml-plain colored"></i></li>
+              <li><span>Markdown</span><i class="skill-group__icon devicon-markdown-plain colored"></i></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal>
+            <h3 class="skill-group__title">Frameworks</h3>
+            <ul class="skill-group__list">
+              <li><span>React</span><i class="skill-group__icon fa-brands fa-react"></i></li>
+              <li><span>Angular</span><i class="skill-group__icon fa-brands fa-angular"></i></li>
+              <li><span>Node.js</span><i class="skill-group__icon fa-brands fa-node-js"></i></li>
+              <li><span>Next.js</span><i class="skill-group__icon devicon-nextjs-plain colored"></i></li>
+              <li><span>Express</span><i class="skill-group__icon devicon-express-original colored"></i></li>
+              <li><span>MongoDB</span><i class="skill-group__icon devicon-mongodb-plain-wordmark colored"></i></li>
+              <li><span>PostgreSQL</span><i class="skill-group__icon devicon-postgresql-plain-wordmark colored"></i>
+              </li>
+              <li><span>SpringBoot</span><i class="skill-group__icon devicon-spring-original colored"></i></li>
+              <li><span>jQuery</span><i class="skill-group__icon devicon-jquery-plain colored"></i></li>
+              <li><span>Android SDK</span><i class="skill-group__icon fa-brands fa-android"></i></li>
+              <li><span>Git</span><i class="skill-group__icon devicon-git-plain colored"></i></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal>
+            <h3 class="skill-group__title">Tools &amp; Cloud</h3>
+            <ul class="skill-group__list">
+              <li><span>GitHub</span><i class="skill-group__icon devicon-github-original colored"></i></li>
+              <li><span>Docker</span><i class="skill-group__icon devicon-docker-plain colored"></i></li>
+              <li><span>AWS</span><i class="skill-group__icon devicon-amazonwebservices-plain-wordmark colored"></i>
+              </li>
+              <li><span>Firebase</span><i class="skill-group__icon devicon-firebase-plain colored"></i></li>
+              <li><span>Figma</span><i class="skill-group__icon devicon-figma-plain colored"></i></li>
+              <li><span>VS Code</span><i class="skill-group__icon devicon-vscode-plain colored"></i></li>
+              <li><span>Linux</span><i class="skill-group__icon devicon-linux-plain colored"></i></li>
+              <li><span>Ollama</span><i class="skill-group__icon devicon-ollama-plain colored"></i></li>
+              <li><span>Vercel / Netlify</span><i class="skill-group__icon devicon-vercel-plain colored"></i></li>
+              <li><span>Postman</span><i class="skill-group__icon devicon-postman-plain colored"></i></li>
+              <li><span>Android Studio</span><i class="skill-group__icon devicon-androidstudio-plain colored"></i></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== WORK ========== -->
+    <section class="section work" id="work">
+      <div class="container">
+        <div class="section__header" data-reveal>
+          <span class="section__number">03</span>
+          <h2 class="section__title">Selected Work</h2>
+        </div>
+
+        <div class="projects">
+          <article class="project" data-reveal>
+            <a href="https://calculator-bhavy.netlify.app" class="project__image" target="_blank" rel="noopener">
+              <img src="./assets/images/Calculator.png" alt="Calculator App Screenshot" loading="lazy">
+              <span class="project__image-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </span>
+            </a>
+            <div class="project__info">
+              <span class="project__number">01</span>
+              <h3 class="project__title">Calculator</h3>
+              <p class="project__desc">A clean, functional calculator application with modern UI, built entirely with
+                vanilla JavaScript, HTML, and CSS.</p>
+              <div class="project__tags">
+                <span class="project__tag">JavaScript</span>
+                <span class="project__tag">HTML</span>
+                <span class="project__tag">CSS</span>
+              </div>
+              <div class="project__links">
+                <a href="https://calculator-bhavy.netlify.app" target="_blank" rel="noopener" class="project__link">
+                  Live Demo
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
                 </a>
-            </p>
+                <a href="https://github.com/bhavyup/Calculator" target="_blank" rel="noopener" class="project__link">
+                  Source Code
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
 
-            <p class="copyright">
-                &copy; 2025 <a href="#">Bhavy Upreti</a>. All Rights Reserved By Bhavy Upreti.
-            </p>
+          <article class="project project--reverse" data-reveal>
+            <a href="https://bhavyup.github.io/My-Portfolio/" class="project__image" target="_blank" rel="noopener">
+              <img src="./assets/images/Portfolio.png" alt="Portfolio Website Screenshot" loading="lazy">
+              <span class="project__image-overlay">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </span>
+            </a>
+            <div class="project__info">
+              <span class="project__number">02</span>
+              <h3 class="project__title">Portfolio</h3>
+              <p class="project__desc">Personal portfolio website showcasing projects, skills, and creative identity
+                with a responsive, immersive design.</p>
+              <div class="project__tags">
+                <span class="project__tag">HTML</span>
+                <span class="project__tag">CSS</span>
+                <span class="project__tag">JavaScript</span>
+                <span class="project__tag">Figma</span>
+              </div>
+              <div class="project__links">
+                <a href="https://bhavyup.github.io/My-Portfolio/" target="_blank" rel="noopener" class="project__link">
+                  Live Demo
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </a>
+                <a href="https://github.com/bhavyup/My-Portfolio" target="_blank" rel="noopener" class="project__link">
+                  Source Code
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="work__cta" data-reveal>
+          <a href="https://github.com/bhavyup?tab=repositories" target="_blank" rel="noopener" class="view-all">
+            <span class="view-all__text">View All Projects on GitHub</span>
+            <span class="view-all__arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== JOURNEY: EDUCATION + CERTIFICATIONS + INTERESTS ========== -->
+    <section class="section journey" id="journey">
+      <div class="container">
+        <div class="section__header" data-reveal>
+          <span class="section__number">04</span>
+          <h2 class="section__title">Journey</h2>
+        </div>
+
+        <div class="journey__grid">
+
+          <!-- Education -->
+          <div class="journey__block" data-reveal>
+            <h3 class="journey__block-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                <path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5" />
+              </svg>
+              Education
+            </h3>
+            <div class="timeline">
+              <div class="timeline__item">
+                <div class="timeline__dot" aria-hidden="true"></div>
+                <div class="timeline__content">
+                  <span class="timeline__date">2022 — 2026</span>
+                  <h4 class="timeline__title">B.Tech — Computer Science Engineering</h4>
+                  <p class="timeline__place">Dr. A. P. J. Abdul Kalam Institute of Technology, Tanakpur (UK)</p>
+                  <p class="timeline__detail">Focused on Data Structures, Algorithms, Web Development, and Cloud
+                    Computing. Active participant in hackathons and coding competitions.</p>
+                </div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__dot" aria-hidden="true"></div>
+                <div class="timeline__content">
+                  <span class="timeline__date">2021 — 2022</span>
+                  <h4 class="timeline__title">Intermediate (XII) — Science Stream</h4>
+                  <p class="timeline__place">Uttarakhand Board of Secondary Education</p>
+                  <p class="timeline__detail">Physics, Chemistry, Mathematics with Computer Science elective.</p>
+                </div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__dot" aria-hidden="true"></div>
+                <div class="timeline__content">
+                  <span class="timeline__date">2019 — 2020</span>
+                  <h4 class="timeline__title">Highschool (X) — Science Stream</h4>
+                  <p class="timeline__place">Uttarakhand Board of Secondary Education</p>
+                  <p class="timeline__detail">Physics, Chemistry, Mathematics, Biology, Social Science with Computer
+                    Science elective.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certifications -->
+          <div class="journey__block" data-reveal>
+            <h3 class="journey__block-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M7 7h.01M7 12h10M7 17h10" />
+              </svg>
+              Certifications
+            </h3>
+            <div class="certs">
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://freecodecamp.org/certification/bhavyupreti/responsive-web-design-v9"
+                  class="cert__info">
+                  <h4 class="cert__title">Responsive Web Design</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        bhavyupreti-rwdv9</span><span class="cert__issuer">FreeCodeCamp / Online</span>
+                    </div>
+                    <span class="cert__date">Feb 2026</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://freecodecamp.org/certification/bhavyupreti/relational-databases-v9" class="cert__info">
+                  <h4 class="cert__title">Relational Databases</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        bhavyupreti-rdv9</span><span class="cert__issuer">FreeCodeCamp / Online</span>
+                    </div>
+                    <span class="cert__date">Feb 2026</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/9PBTqmSxAf6zZTseP/udmxiyHeqYQLkTPvf_9PBTqmSxAf6zZTseP_4u4baxnj2YHS6L4Xg_1751449556636_completion_certificate.pdf"
+                  class="cert__info">
+                  <h4 class="cert__title">Deloitte Australia - Technology Job Simulation</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        sjHpAXsxhnhpLgcRs</span><span class="cert__issuer">Forage / Online</span></div>
+                    <span class="cert__date">Jul 2025</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://freecodecamp.org/certification/bhavyupreti/data-visualization" class="cert__info">
+                  <h4 class="cert__title">Data Visualization</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        bhavyupreti-dv</span><span class="cert__issuer">FreeCodeCamp / Online</span>
+                    </div>
+                    <span class="cert__date">Jun 2025</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://freecodecamp.org/certification/bhavyupreti/front-end-development-libraries"
+                  class="cert__info">
+                  <h4 class="cert__title">Front-End Development Libraries</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        bhavyupreti-fedl</span><span class="cert__issuer">FreeCodeCamp / Online</span>
+                    </div>
+                    <span class="cert__date">April 2024</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+                <a href="https://freecodecamp.org/certification/bhavyupreti/javascript-algorithms-and-data-structures"
+                  class="cert__info">
+                  <h4 class="cert__title">JavaScript Algorithms and Data Structures</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data"><span class="cert__id" aria-hidden="true">Cred.ID:
+                        bhavyupreti-ljaads</span><span class="cert__issuer">FreeCodeCamp / Online</span>
+                    </div>
+                    <span class="cert__date">Mar 2024</span>
+                  </div>
+                </a>
+              </div>
+              <div class="cert">
+                <span class="cert__icon" aria-hidden="true">&#9670;</span>
+
+                <a href="https://www.codsoft.co.in/bhavya-upreti" class="cert__info" id="codsoft-cert"
+                  onclick="handleCertClick(event)">
+
+                  <h4 class="cert__title">Web Development Internship Completion</h4>
+                  <div class="cert__meta">
+                    <div class="cert__data">
+                      <span class="cert__id" aria-hidden="true">Cred.ID: 22476bf</span>
+                      <span class="cert__issuer">CodSoft / Online</span>
+                    </div>
+                    <span class="cert__date">Dec 2023</span>
+                  </div>
+                </a>
+
+                <form id="codsoft-form" action="https://www.codsoft.co.in/" method="POST" style="display:none;">
+                  <input type="hidden" name="certificate_code" value="22476bf">
+                  <input type="hidden" name="code_data" value="Search">
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Interests -->
+          <div class="journey__block journey__block--wide" data-reveal>
+            <h3 class="journey__block-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              Currently Exploring
+            </h3>
+            <div class="interests">
+              <div class="interest">
+                <span class="interest__emoji">&#9729;&#65039;</span>
+                <div>
+                  <h4 class="interest__title">Cloud &amp; DevOps</h4>
+                  <p class="interest__desc">Docker, AWS services, CI/CD pipelines, and infrastructure as code. Building
+                    for scale.</p>
+                </div>
+              </div>
+              <div class="interest">
+                <span class="interest__emoji">&#128640;</span>
+                <div>
+                  <h4 class="interest__title">System Design</h4>
+                  <p class="interest__desc">Distributed systems, microservices architecture, and designing software that
+                    can handle real-world load.</p>
+                </div>
+              </div>
+              <div class="interest">
+                <span class="interest__emoji">&#129302;</span>
+                <div>
+                  <h4 class="interest__title">AI &amp; Machine Learning</h4>
+                  <p class="interest__desc">Exploring ML fundamentals, NLP, and how AI is reshaping modern developer
+                    tools.</p>
+                </div>
+              </div>
+              <div class="interest">
+                <span class="interest__emoji">&#127912;</span>
+                <div>
+                  <h4 class="interest__title">Design Engineering</h4>
+                  <p class="interest__desc">The intersection of code and design — motion, typography, and building
+                    interfaces people love to use.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <!-- 
-    - #GO TO TOP
-  -->
+    <!-- ========== CONTACT ========== -->
+    <section class="section contact" id="contact">
+      <div class="container">
+        <div class="section__header" data-reveal>
+          <span class="section__number">05</span>
+          <h2 class="section__title">Get in Touch</h2>
+        </div>
 
-    <a href="#top" class="go-top" data-go-top title="Go to Top">
-        <ion-icon name="arrow-up"></ion-icon>
-    </a>
+        <div class="contact__grid">
+          <div class="contact__info" data-reveal>
+            <p class="contact__lead">
+              Have a project in mind or just want to connect? I'd love to hear from you.
+            </p>
 
-    <!-- 
-    - custom js link
-  -->
-    <script src="./script.js"></script>
+            <div class="contact__details">
+              <div class="contact__item">
+                <span class="contact__label"><i class="fa-solid fa-map"></i> Location</span>
+                <address class="contact__value">Nainital, Uttarakhand</address>
+              </div>
+              <div class="contact__item">
+                <span class="contact__label"><i class="fa-solid fa-envelope"></i> Email</span>
+                <a href="mailto:bhavyupreti0@gmail.com"
+                  class="contact__value contact__value--link">bhavyupreti0@gmail.com</a>
+              </div>
+              <div class="contact__item">
+                <span class="contact__label"><i class="fa-brands fa-whatsapp"></i> WhatsApp or Call</span>
+                <a href="https://wa.me/919528263794?text=Hello" class="contact__value contact__value--link">+91
+                  9528263794</a>
+              </div>
+            </div>
 
-    <!-- 
-    - ionicon link
-  -->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+            <div class="contact__socials">
+              <a href="https://github.com/bhavyup" target="_blank" rel="noopener">
+                <i class="fa-brands fa-github" aria-hidden="true"></i>
+                <span>GitHub</span>
+              </a>
+              <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" target="_blank" rel="noopener">
+                <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                <span>LinkedIn</span>
+              </a>
+              <a href="https://instagram.com/bhavy_upreti" target="_blank" rel="noopener">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="https://t.me/bhavy_upreti" target="_blank" rel="noopener">
+                <i class="fa-brands fa-telegram" aria-hidden="true"></i>
+                <span>Telegram</span>
+              </a>
+            </div>
+          </div>
 
+          <form class="contact__form" id="contactForm" action="https://formspree.io/f/mjkrqowz" method="POST"
+            data-reveal>
+            <div class="form-group">
+              <input type="text" name="name" id="cname" required placeholder=" " autocomplete="name">
+              <label for="cname">Your Name</label>
+              <div class="form-line"></div>
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" id="cemail" required placeholder=" " autocomplete="email">
+              <label for="cemail">Your Email</label>
+              <div class="form-line"></div>
+            </div>
+            <div class="form-group">
+              <input type="tel" name="phone" id="cphone" placeholder=" " autocomplete="tel">
+              <label for="cphone">Phone (optional)</label>
+              <div class="form-line"></div>
+            </div>
+            <div class="form-group">
+              <textarea name="message" id="cmessage" required placeholder=" " rows="4"></textarea>
+              <label for="cmessage">Your Message</label>
+              <div class="form-line"></div>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">
+              <span>Send Message</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+            <div class="form-response" id="formResponse"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__brand">Bhavy Upreti</p>
+      <p class="footer__copy">&copy; 2026 All Rights Reserved</p>
+      <a href="#hero" class="footer__top">Back to Top &uarr;</a>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
 </body>
 
 </html>
