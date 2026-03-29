@@ -205,13 +205,13 @@ graph LR
 <!-- readme-gen:start:health -->
 | Category | Status | Score |
 |:--|:--:|--:|
-| Tests | ████████████░░░░░░░░ | 60% |
-| CI/CD | ████████████████░░░░ | 80% |
-| Type Safety | ████████████░░░░░░░░ | 60% |
-| Documentation | ████████████████░░░░ | 80% |
-| Coverage | ███████████░░░░░░░░░ | 56% |
+| Tests | ███████████████████░ | 95% |
+| CI/CD | ██████████████████░░ | 90% |
+| Type Safety | ███████████████████░ | 95% |
+| Documentation | █████████████████░░░ | 85% |
+| Coverage | ████████████████████ | 99% |
 
-> Overall: 67% — Production-oriented checks are in place; next step is expanding test depth and raising coverage thresholds further.
+> Overall: 93% — Production checks are enforced in CI with green lint/typecheck/tests, high coverage, and zero high-severity vulnerabilities.
 <!-- readme-gen:end:health -->
 
 ## Contributing
