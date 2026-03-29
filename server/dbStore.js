@@ -31,10 +31,6 @@ async function initDatabase() {
       await client.connect();
       db = client.db(config.storage.mongoDbName);
 
-      await db.collection("content_store").createIndex(
-        { _id: 1 },
-        { unique: true },
-      );
       await db.collection("audit_log").createIndex({ ts: -1 });
     })();
   }
