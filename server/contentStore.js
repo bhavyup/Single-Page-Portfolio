@@ -2,6 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const { config } = require("./config");
 const { contentSchema } = require("./contentSchema");
+const {
+  isDatabaseEnabled,
+  getStoredContent,
+  saveContent,
+} = require("./dbStore");
 
 function ensureStore() {
   const dir = path.dirname(config.dataPath);
@@ -13,32 +18,56 @@ function ensureStore() {
   }
 }
 
-function readContent() {
+function readContentFromFile() {
   ensureStore();
   const raw = fs.readFileSync(config.dataPath, "utf8");
-  const parsed = JSON.parse(raw);
-  const result = contentSchema.safeParse(parsed);
+  return JSON.parse(raw);
+}
+
+function validateContent(payload) {
+  const result = contentSchema.safeParse(payload);
   if (!result.success) {
     throw new Error(`Invalid content structure: ${result.error.message}`);
   }
+
   return result.data;
 }
 
-function writeContent(nextContent) {
-  ensureStore();
-  const result = contentSchema.safeParse(nextContent);
-  if (!result.success) {
-    const firstIssue = result.error.issues[0];
+async function readContent() {
+  if (isDatabaseEnabled()) {
+    const stored = await getStoredContent();
+    if (stored) {
+      return validateContent(stored);
+    }
+
+    const seeded = validateContent(readContentFromFile());
+    await saveContent(seeded);
+    return seeded;
+  }
+
+  return validateContent(readContentFromFile());
+}
+
+async function writeContent(nextContent) {
+  const validated = contentSchema.safeParse(nextContent);
+  if (!validated.success) {
+    const firstIssue = validated.error.issues[0];
     throw new Error(
       `Validation failed at ${firstIssue.path.join(".") || "root"}: ${firstIssue.message}`,
     );
   }
 
+  if (isDatabaseEnabled()) {
+    await saveContent(validated.data);
+    return validated.data;
+  }
+
+  ensureStore();
   const tempPath = `${config.dataPath}.tmp`;
-  fs.writeFileSync(tempPath, JSON.stringify(result.data, null, 2), "utf8");
+  fs.writeFileSync(tempPath, JSON.stringify(validated.data, null, 2), "utf8");
   fs.renameSync(tempPath, config.dataPath);
 
-  return result.data;
+  return validated.data;
 }
 
 module.exports = {

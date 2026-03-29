@@ -90,9 +90,9 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", env: config.env, ts: new Date().toISOString() });
 });
 
-app.get("/api/content", (_req, res) => {
+app.get("/api/content", async (_req, res) => {
   try {
-    const content = readContent();
+    const content = await readContent();
     res.json({ data: content });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -122,35 +122,41 @@ app.post("/admin/auth/login", loginLimiter, async (req, res) => {
 
   const valid = await verifyCredentials(username, password);
   if (!valid) {
-    appendAudit({
-      actor: username,
-      action: "login.failed",
-      ip: req.ip,
-      userAgent: req.get("user-agent") || "unknown",
-    });
+    try {
+      await appendAudit({
+        actor: username,
+        action: "login.failed",
+        ip: req.ip,
+        userAgent: req.get("user-agent") || "unknown",
+      });
+    } catch {}
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const token = signSession(username);
   res.cookie(config.auth.cookieName, token, getSessionCookieOptions());
 
-  appendAudit({
-    actor: username,
-    action: "login.success",
-    ip: req.ip,
-    userAgent: req.get("user-agent") || "unknown",
-  });
+  try {
+    await appendAudit({
+      actor: username,
+      action: "login.success",
+      ip: req.ip,
+      userAgent: req.get("user-agent") || "unknown",
+    });
+  } catch {}
 
   return res.json({ ok: true });
 });
 
-app.post("/admin/auth/logout", requireAdmin, (req, res) => {
-  appendAudit({
-    actor: req.admin.sub,
-    action: "logout",
-    ip: req.ip,
-    userAgent: req.get("user-agent") || "unknown",
-  });
+app.post("/admin/auth/logout", requireAdmin, async (req, res) => {
+  try {
+    await appendAudit({
+      actor: req.admin.sub,
+      action: "logout",
+      ip: req.ip,
+      userAgent: req.get("user-agent") || "unknown",
+    });
+  } catch {}
 
   res.clearCookie(config.auth.cookieName, getSessionCookieOptions());
   res.clearCookie("csrf_token", {
@@ -175,28 +181,30 @@ app.get("/admin/auth/session", requireAdmin, (req, res) => {
 
 app.use("/admin/api", adminLimiter, requireAdmin);
 
-app.get("/admin/api/content", (req, res) => {
+app.get("/admin/api/content", async (req, res) => {
   try {
-    const content = readContent();
+    const content = await readContent();
     res.json({ data: content, fetchedAt: new Date().toISOString() });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.put("/admin/api/content", requireCsrf, (req, res) => {
+app.put("/admin/api/content", requireCsrf, async (req, res) => {
   try {
-    const updated = writeContent(req.body?.data);
+    const updated = await writeContent(req.body?.data);
 
-    appendAudit({
-      actor: req.admin.sub,
-      action: "content.replace",
-      ip: req.ip,
-      userAgent: req.get("user-agent") || "unknown",
-      metadata: {
-        topLevelKeys: Object.keys(updated),
-      },
-    });
+    try {
+      await appendAudit({
+        actor: req.admin.sub,
+        action: "content.replace",
+        ip: req.ip,
+        userAgent: req.get("user-agent") || "unknown",
+        metadata: {
+          topLevelKeys: Object.keys(updated),
+        },
+      });
+    } catch {}
 
     res.json({ ok: true, data: updated });
   } catch (error) {
@@ -204,25 +212,27 @@ app.put("/admin/api/content", requireCsrf, (req, res) => {
   }
 });
 
-app.patch("/admin/api/content/:section", requireCsrf, (req, res) => {
+app.patch("/admin/api/content/:section", requireCsrf, async (req, res) => {
   const { section } = req.params;
 
   try {
-    const current = readContent();
+    const current = await readContent();
     if (!(section in current)) {
       return res.status(404).json({ error: `Unknown section: ${section}` });
     }
 
     current[section] = req.body?.data;
-    const updated = writeContent(current);
+    const updated = await writeContent(current);
 
-    appendAudit({
-      actor: req.admin.sub,
-      action: "content.section.update",
-      ip: req.ip,
-      userAgent: req.get("user-agent") || "unknown",
-      metadata: { section },
-    });
+    try {
+      await appendAudit({
+        actor: req.admin.sub,
+        action: "content.section.update",
+        ip: req.ip,
+        userAgent: req.get("user-agent") || "unknown",
+        metadata: { section },
+      });
+    } catch {}
 
     return res.json({ ok: true, data: updated[section] });
   } catch (error) {
@@ -230,9 +240,13 @@ app.patch("/admin/api/content/:section", requireCsrf, (req, res) => {
   }
 });
 
-app.get("/admin/api/audit", (req, res) => {
-  const log = readAuditLog();
-  res.json({ data: log });
+app.get("/admin/api/audit", async (req, res) => {
+  try {
+    const log = await readAuditLog();
+    res.json({ data: log });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 const adminDir = path.join(__dirname, "public", "admin");

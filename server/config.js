@@ -4,16 +4,26 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const ROOT_DIR = path.resolve(__dirname, "..");
-const DATA_PATH = path.join(__dirname, "data", "content.json");
-const AUDIT_PATH = path.join(__dirname, "data", "audit-log.json");
+const DATA_PATH = process.env.CONTENT_FILE_PATH || path.join(__dirname, "data", "content.json");
+const AUDIT_PATH = process.env.AUDIT_FILE_PATH || path.join(__dirname, "data", "audit-log.json");
+const ENV = process.env.NODE_ENV || "development";
+const IS_PRODUCTION = ENV === "production";
+const STORAGE_DRIVER =
+  process.env.STORAGE_DRIVER || (process.env.MONGODB_URI || process.env.DATABASE_URL ? "database" : "file");
 
 const config = {
-  env: process.env.NODE_ENV || "development",
-  isProduction: (process.env.NODE_ENV || "development") === "production",
+  env: ENV,
+  isProduction: IS_PRODUCTION,
   port: Number(process.env.PORT || 3000),
   rootDir: ROOT_DIR,
   dataPath: DATA_PATH,
   auditPath: AUDIT_PATH,
+  storage: {
+    driver: STORAGE_DRIVER,
+    useDatabase: STORAGE_DRIVER === "database",
+    mongoUri: process.env.MONGODB_URI || process.env.DATABASE_URL || "",
+    mongoDbName: process.env.MONGODB_DB_NAME || "portfolio",
+  },
   admin: {
     username: process.env.ADMIN_USERNAME || "admin",
     passwordHash: process.env.ADMIN_PASSWORD_HASH || "",
@@ -31,6 +41,9 @@ function assertConfig() {
   if (!config.admin.passwordHash) missing.push("ADMIN_PASSWORD_HASH");
   if (!config.auth.jwtSecret) missing.push("JWT_SECRET");
   if (!config.auth.csrfSecret) missing.push("CSRF_SECRET");
+  if (config.storage.useDatabase && !config.storage.mongoUri) {
+    missing.push("MONGODB_URI");
+  }
 
   if (missing.length) {
     throw new Error(

@@ -4,6 +4,7 @@ const request = require("supertest");
 let app;
 
 beforeAll(() => {
+  process.env.STORAGE_DRIVER = "file";
   process.env.ADMIN_USERNAME = "admin";
   process.env.ADMIN_PASSWORD_HASH = bcrypt.hashSync("TestPass@123", 8);
   process.env.JWT_SECRET = "test-jwt-secret-for-ci";

@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { config } = require("./config");
+const { isDatabaseEnabled, insertAudit, listAudit } = require("./dbStore");
 
 function ensureAuditFile() {
   const dir = path.dirname(config.auditPath);
@@ -11,15 +12,27 @@ function ensureAuditFile() {
   }
 }
 
-function readAuditLog() {
+function readAuditLogFromFile() {
   ensureAuditFile();
   const raw = fs.readFileSync(config.auditPath, "utf8");
   const parsed = JSON.parse(raw);
   return Array.isArray(parsed) ? parsed : [];
 }
 
-function appendAudit(event) {
-  const current = readAuditLog();
+async function readAuditLog() {
+  if (isDatabaseEnabled()) {
+    return listAudit(500);
+  }
+
+  return readAuditLogFromFile();
+}
+
+async function appendAudit(event) {
+  if (isDatabaseEnabled()) {
+    return insertAudit(event);
+  }
+
+  const current = readAuditLogFromFile();
   const entry = {
     id: crypto.randomUUID(),
     ts: new Date().toISOString(),
