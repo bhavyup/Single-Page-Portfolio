@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "{index.html,script.js,styles.css,assets/**,logo/**,server/public/**,server/data/content.json}"
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
