@@ -87,7 +87,17 @@ const adminLimiter = rateLimit({
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", env: config.env, ts: new Date().toISOString() });
+  res.json({
+    status: "ok",
+    env: config.env,
+    storage: {
+      driver: config.storage.driver,
+      useDatabase: config.storage.useDatabase,
+      hasMongoUri: Boolean(config.storage.mongoUri),
+      mongoDbName: config.storage.mongoDbName,
+    },
+    ts: new Date().toISOString(),
+  });
 });
 
 app.get("/api/content", async (_req, res) => {
