@@ -1,0 +1,23 @@
+{
+  "name": "single-page-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio with secure admin-backed dynamic content API",
+  "main": "server/app.js",
+  "scripts": {
+    "dev": "node server/app.js",
+    "start": "node server/app.js",
+    "admin:hash": "node -e \"const bcrypt=require('bcryptjs');const pwd=process.argv[1];if(!pwd){console.error('Usage: npm run admin:hash -- <password>');process.exit(1);}console.log(bcrypt.hashSync(pwd,12));\""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "zod": "^3.25.76"
+  }
+}

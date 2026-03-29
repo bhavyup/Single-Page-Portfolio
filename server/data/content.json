@@ -1,0 +1,603 @@
+{
+  "seo": {
+    "title": "Bhavy Upreti — Full-Stack Developer",
+    "description": "Full-stack developer crafting clean, creative, and impactful digital experiences.",
+    "keywords": "Bhavy Upreti, Portfolio, Full-Stack Developer, Web Developer, React, Node.js, JavaScript",
+    "author": "Bhavy Upreti",
+    "ogTitle": "Bhavy Upreti — Full-Stack Developer",
+    "ogDescription": "Crafting clean, creative, and impactful digital experiences.",
+    "ogType": "website",
+    "ogUrl": "https://bhavyup.github.io/My-Portfolio"
+  },
+  "nav": {
+    "logoText": "B",
+    "links": [
+      {
+        "href": "#origin",
+        "label": "Origin"
+      },
+      {
+        "href": "#about",
+        "label": "About"
+      },
+      {
+        "href": "#skills",
+        "label": "Expertise"
+      },
+      {
+        "href": "#work",
+        "label": "Work"
+      },
+      {
+        "href": "#journey",
+        "label": "Journey"
+      },
+      {
+        "href": "#contact",
+        "label": "Contact"
+      }
+    ],
+    "mobileFooterLinks": [
+      {
+        "href": "https://github.com/bhavyup",
+        "label": "GitHub"
+      },
+      {
+        "href": "https://www.linkedin.com/in/bhavy-upreti",
+        "label": "LinkedIn"
+      },
+      {
+        "href": "https://instagram.com/bhavy_upreti",
+        "label": "Instagram"
+      }
+    ]
+  },
+  "hero": {
+    "eyebrow": [
+      "Full-Stack Developer",
+      "Creative Engineer"
+    ],
+    "firstName": "Bhavy",
+    "lastName": "Upreti",
+    "taglineLines": [
+      "Designing and building clean, creative,",
+      "and impactful digital experiences."
+    ],
+    "actions": [
+      {
+        "href": "#work",
+        "label": "View Work",
+        "kind": "primary"
+      },
+      {
+        "href": "./assets/resume/NoLC Resume.pdf",
+        "label": "Resume",
+        "kind": "ghost",
+        "download": true
+      }
+    ],
+    "stats": [
+      {
+        "value": "3+",
+        "label": "Years Building"
+      },
+      {
+        "value": "10+",
+        "label": "Projects Shipped"
+      },
+      {
+        "value": "5+",
+        "label": "Tech Stacks"
+      }
+    ],
+    "socialLinks": [
+      {
+        "href": "https://github.com/bhavyup",
+        "label": "GitHub",
+        "short": "GH",
+        "iconClass": "fa-brands fa-github"
+      },
+      {
+        "href": "https://www.linkedin.com/in/bhavy-upreti",
+        "label": "LinkedIn",
+        "short": "LI",
+        "iconClass": "fa-brands fa-linkedin-in"
+      },
+      {
+        "href": "https://instagram.com/bhavy_upreti",
+        "label": "Instagram",
+        "short": "IG",
+        "iconClass": "fa-brands fa-instagram"
+      }
+    ],
+    "scrollText": "Scroll"
+  },
+  "sections": {
+    "origin": {
+      "number": "00",
+      "title": "Frame Reactor"
+    },
+    "about": {
+      "number": "01",
+      "title": "About"
+    },
+    "skills": {
+      "number": "02",
+      "title": "Expertise"
+    },
+    "work": {
+      "number": "03",
+      "title": "Selected Work"
+    },
+    "journey": {
+      "number": "04",
+      "title": "Journey"
+    },
+    "contact": {
+      "number": "05",
+      "title": "Get in Touch"
+    }
+  },
+  "origin": {
+    "lede": "A four-scene micro-film controlled by your scroll. The reactor locks, the frame rails ignite, and the sequence resolves into full power.",
+    "cards": [
+      {
+        "kicker": "Scene 01",
+        "title": "Signal Intake",
+        "desc": "Loose ideas enter the chamber and get a clear direction."
+      },
+      {
+        "kicker": "Scene 02",
+        "title": "Constraint Lock",
+        "desc": "Design and engineering snap to one measurable system."
+      },
+      {
+        "kicker": "Scene 03",
+        "title": "Frame Fabrication",
+        "desc": "Visual rhythm, interaction, and structure forge together."
+      },
+      {
+        "kicker": "Scene 04",
+        "title": "Flight State",
+        "desc": "Final output: minimal, cinematic, and unmistakably precise."
+      }
+    ]
+  },
+  "about": {
+    "quote": "Write code that's not just smart, but kind — to users, to future devs, and to your future self.",
+    "intro": "Hey, I'm Bhavy — a final-year Computer Science Engineering student with a passion for building clean, creative, and impactful software. I thrive in solving real-world problems through code, from crafting minimal front-end experiences to diving deep into backend systems.",
+    "textHTML": "My interests span <strong>full-stack web development, DevOps, and cloud technologies</strong>.I believe great tech is built not just with code, but with curiosity, collaboration, and consistency.",
+    "columns": [
+      {
+        "title": "What I Do",
+        "items": [
+          "Full-stack web development (MERN)",
+          "Responsive and intuitive interfaces",
+          "Backend APIs with Node.js and Express",
+          "Android development with Java",
+          "DevOps, CI/CD and cloud pipelines"
+        ]
+      },
+      {
+        "title": "Beyond Code",
+        "items": [
+          "Crafting the perfect coding playlist",
+          "Sci-fi, philosophy and rabbit holes",
+          "Fueled by unhealthy levels of caffeine",
+          "Organizing things that don't need it",
+          "Gaming (badly, but with passion)"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "href": "https://www.linkedin.com/in/bhavy-upreti",
+        "label": "Hire Me",
+        "kind": "primary",
+        "targetBlank": true
+      },
+      {
+        "href": "./assets/resume/NoLC Resume.pdf",
+        "label": "Download CV",
+        "kind": "ghost",
+        "download": true
+      }
+    ]
+  },
+  "skills": {
+    "marquee": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "Java",
+      "Python",
+      "Angular",
+      "Express",
+      "MongoDB",
+      "Docker",
+      "AWS",
+      "Kotlin",
+      "Git"
+    ],
+    "groups": [
+      {
+        "title": "Languages",
+        "items": [
+          {
+            "name": "JavaScript",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-square-js\"></i>"
+          },
+          {
+            "name": "Java",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-java\"></i>"
+          },
+          {
+            "name": "C / C++",
+            "iconHTML": "<i><i class=\"skill-group__icon devicon-c-original colored\"></i><i class=\"skill-group__icon devicon-cplusplus-plain colored\"></i></i>"
+          },
+          {
+            "name": "Python",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-python\"></i>"
+          },
+          {
+            "name": "HTML & CSS",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-html5\"></i>"
+          },
+          {
+            "name": "SQL",
+            "iconHTML": "<i class=\"skill-group__icon fa-solid fa-database\"></i>"
+          },
+          {
+            "name": "CSS",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-css3-alt\"></i>"
+          },
+          {
+            "name": "Kotlin",
+            "iconHTML": "<i class=\"skill-group__icon devicon-kotlin-plain colored\"></i>"
+          },
+          {
+            "name": "TypeScript",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-typescript\"></i>"
+          },
+          {
+            "name": "XML",
+            "iconHTML": "<i class=\"skill-group__icon devicon-xml-plain colored\"></i>"
+          },
+          {
+            "name": "Markdown",
+            "iconHTML": "<i class=\"skill-group__icon devicon-markdown-plain colored\"></i>"
+          }
+        ]
+      },
+      {
+        "title": "Frameworks",
+        "items": [
+          {
+            "name": "React",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-react\"></i>"
+          },
+          {
+            "name": "Angular",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-angular\"></i>"
+          },
+          {
+            "name": "Node.js",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-node-js\"></i>"
+          },
+          {
+            "name": "Next.js",
+            "iconHTML": "<i class=\"skill-group__icon devicon-nextjs-plain colored\"></i>"
+          },
+          {
+            "name": "Express",
+            "iconHTML": "<i class=\"skill-group__icon devicon-express-original colored\"></i>"
+          },
+          {
+            "name": "MongoDB",
+            "iconHTML": "<i class=\"skill-group__icon devicon-mongodb-plain-wordmark colored\"></i>"
+          },
+          {
+            "name": "PostgreSQL",
+            "iconHTML": "<i class=\"skill-group__icon devicon-postgresql-plain-wordmark colored\"></i>"
+          },
+          {
+            "name": "SpringBoot",
+            "iconHTML": "<i class=\"skill-group__icon devicon-spring-original colored\"></i>"
+          },
+          {
+            "name": "jQuery",
+            "iconHTML": "<i class=\"skill-group__icon devicon-jquery-plain colored\"></i>"
+          },
+          {
+            "name": "Android SDK",
+            "iconHTML": "<i class=\"skill-group__icon fa-brands fa-android\"></i>"
+          },
+          {
+            "name": "Git",
+            "iconHTML": "<i class=\"skill-group__icon devicon-git-plain colored\"></i>"
+          }
+        ]
+      },
+      {
+        "title": "Tools & Cloud",
+        "items": [
+          {
+            "name": "GitHub",
+            "iconHTML": "<i class=\"skill-group__icon devicon-github-original colored\"></i>"
+          },
+          {
+            "name": "Docker",
+            "iconHTML": "<i class=\"skill-group__icon devicon-docker-plain colored\"></i>"
+          },
+          {
+            "name": "AWS",
+            "iconHTML": "<i class=\"skill-group__icon devicon-amazonwebservices-plain-wordmark colored\"></i>"
+          },
+          {
+            "name": "Firebase",
+            "iconHTML": "<i class=\"skill-group__icon devicon-firebase-plain colored\"></i>"
+          },
+          {
+            "name": "Figma",
+            "iconHTML": "<i class=\"skill-group__icon devicon-figma-plain colored\"></i>"
+          },
+          {
+            "name": "VS Code",
+            "iconHTML": "<i class=\"skill-group__icon devicon-vscode-plain colored\"></i>"
+          },
+          {
+            "name": "Linux",
+            "iconHTML": "<i class=\"skill-group__icon devicon-linux-plain colored\"></i>"
+          },
+          {
+            "name": "Ollama",
+            "iconHTML": "<i class=\"skill-group__icon devicon-ollama-plain colored\"></i>"
+          },
+          {
+            "name": "Vercel / Netlify",
+            "iconHTML": "<i class=\"skill-group__icon devicon-vercel-plain colored\"></i>"
+          },
+          {
+            "name": "Postman",
+            "iconHTML": "<i class=\"skill-group__icon devicon-postman-plain colored\"></i>"
+          },
+          {
+            "name": "Android Studio",
+            "iconHTML": "<i class=\"skill-group__icon devicon-androidstudio-plain colored\"></i>"
+          }
+        ]
+      }
+    ]
+  },
+  "work": {
+    "projects": [
+      {
+        "number": "01",
+        "title": "Calculator",
+        "desc": "A clean, functional calculator application with modern UI, built entirely with vanilla JavaScript, HTML, and CSS.",
+        "tags": [
+          "JavaScript",
+          "HTML",
+          "CSS"
+        ],
+        "liveDemo": "https://calculator-bhavy.netlify.app",
+        "sourceCode": "https://github.com/bhavyup/Calculator",
+        "placeholderSrc": "./assets/images/Calculator.png",
+        "placeholderAlt": "Calculator App Screenshot"
+      },
+      {
+        "number": "02",
+        "title": "Portfolio",
+        "desc": "Personal portfolio website showcasing projects, skills, and creative identity with a responsive, immersive design.",
+        "tags": [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "Figma"
+        ],
+        "liveDemo": "https://bhavyup.github.io/My-Portfolio/",
+        "sourceCode": "https://github.com/bhavyup/My-Portfolio",
+        "placeholderSrc": "./assets/images/Portfolio.png",
+        "placeholderAlt": "Portfolio Website Screenshot",
+        "reverse": true
+      }
+    ],
+    "cta": {
+      "href": "https://github.com/bhavyup?tab=repositories",
+      "label": "View All Projects on GitHub"
+    }
+  },
+  "journey": {
+    "education": [
+      {
+        "date": "2022 - 2026",
+        "title": "B.Tech - Computer Science Engineering",
+        "place": "Dr. A. P. J. Abdul Kalam Institute of Technology, Tanakpur (UK)",
+        "detail": "Focused on Data Structures, Algorithms, Web Development, and Cloud Computing. Active participant in hackathons and coding competitions."
+      },
+      {
+        "date": "2021 - 2022",
+        "title": "Intermediate (XII) - Science Stream",
+        "place": "Uttarakhand Board of Secondary Education",
+        "detail": "Physics, Chemistry, Mathematics with Computer Science elective."
+      },
+      {
+        "date": "2019 - 2020",
+        "title": "Highschool (X) - Science Stream",
+        "place": "Uttarakhand Board of Secondary Education",
+        "detail": "Physics, Chemistry, Mathematics, Biology, Social Science with Computer Science elective."
+      }
+    ],
+    "certifications": [
+      {
+        "href": "https://freecodecamp.org/certification/bhavyupreti/responsive-web-design-v9",
+        "title": "Responsive Web Design",
+        "credId": "bhavyupreti-rwdv9",
+        "issuer": "FreeCodeCamp / Online",
+        "date": "Feb 2026"
+      },
+      {
+        "href": "https://freecodecamp.org/certification/bhavyupreti/relational-databases-v9",
+        "title": "Relational Databases",
+        "credId": "bhavyupreti-rdv9",
+        "issuer": "FreeCodeCamp / Online",
+        "date": "Feb 2026"
+      },
+      {
+        "href": "https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/9PBTqmSxAf6zZTseP/udmxiyHeqYQLkTPvf_9PBTqmSxAf6zZTseP_4u4baxnj2YHS6L4Xg_1751449556636_completion_certificate.pdf",
+        "title": "Deloitte Australia - Technology Job Simulation",
+        "credId": "sjHpAXsxhnhpLgcRs",
+        "issuer": "Forage / Online",
+        "date": "Jul 2025"
+      },
+      {
+        "href": "https://freecodecamp.org/certification/bhavyupreti/data-visualization",
+        "title": "Data Visualization",
+        "credId": "bhavyupreti-dv",
+        "issuer": "FreeCodeCamp / Online",
+        "date": "Jun 2025"
+      },
+      {
+        "href": "https://freecodecamp.org/certification/bhavyupreti/front-end-development-libraries",
+        "title": "Front-End Development Libraries",
+        "credId": "bhavyupreti-fedl",
+        "issuer": "FreeCodeCamp / Online",
+        "date": "April 2024"
+      },
+      {
+        "href": "https://freecodecamp.org/certification/bhavyupreti/javascript-algorithms-and-data-structures",
+        "title": "JavaScript Algorithms and Data Structures",
+        "credId": "bhavyupreti-ljaads",
+        "issuer": "FreeCodeCamp / Online",
+        "date": "Mar 2024"
+      },
+      {
+        "href": "https://www.codsoft.co.in/bhavya-upreti",
+        "title": "Web Development Internship Completion",
+        "credId": "22476bf",
+        "issuer": "CodSoft / Online",
+        "date": "Dec 2023",
+        "form": {
+          "action": "https://www.codsoft.co.in/",
+          "certificateCode": "22476bf",
+          "codeData": "Search"
+        }
+      }
+    ],
+    "interests": [
+      {
+        "emoji": "☁️",
+        "title": "Cloud & DevOps",
+        "desc": "Docker, AWS services, CI/CD pipelines, and infrastructure as code. Building for scale."
+      },
+      {
+        "emoji": "🚀",
+        "title": "System Design",
+        "desc": "Distributed systems, microservices architecture, and designing software that can handle real-world load."
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI & Machine Learning",
+        "desc": "Exploring ML fundamentals, NLP, and how AI is reshaping modern developer tools."
+      },
+      {
+        "emoji": "🎨",
+        "title": "Design Engineering",
+        "desc": "The intersection of code and design - motion, typography, and building interfaces people love to use."
+      }
+    ]
+  },
+  "contact": {
+    "lead": "Have a project in mind or just want to connect? I'd love to hear from you.",
+    "details": [
+      {
+        "iconClass": "fa-solid fa-map",
+        "label": "Location",
+        "value": "Nainital, Uttarakhand",
+        "href": "https://maps.google.com/?q=Nainital%2C%20Uttarakhand",
+        "type": "link"
+      },
+      {
+        "iconClass": "fa-solid fa-envelope",
+        "label": "Email",
+        "value": "bhavyupreti0@gmail.com",
+        "href": "mailto:bhavyupreti0@gmail.com",
+        "type": "link"
+      },
+      {
+        "iconClass": "fa-brands fa-whatsapp",
+        "label": "WhatsApp or Call",
+        "value": "+91 9528263794",
+        "href": "https://wa.me/919528263794?text=Hello",
+        "type": "link"
+      }
+    ],
+    "socials": [
+      {
+        "href": "https://github.com/bhavyup",
+        "label": "GitHub",
+        "iconClass": "fa-brands fa-github"
+      },
+      {
+        "href": "https://www.linkedin.com/in/bhavy-upreti-772b6b331",
+        "label": "LinkedIn",
+        "iconClass": "fa-brands fa-linkedin-in"
+      },
+      {
+        "href": "https://instagram.com/bhavy_upreti",
+        "label": "Instagram",
+        "iconClass": "fa-brands fa-instagram"
+      },
+      {
+        "href": "https://t.me/bhavy_upreti",
+        "label": "Telegram",
+        "iconClass": "fa-brands fa-telegram"
+      }
+    ],
+    "form": {
+      "action": "https://formspree.io/f/mjkrqowz",
+      "method": "POST",
+      "fields": [
+        {
+          "type": "text",
+          "name": "name",
+          "id": "cname",
+          "required": true,
+          "autocomplete": "name",
+          "label": "Your Name"
+        },
+        {
+          "type": "email",
+          "name": "email",
+          "id": "cemail",
+          "required": true,
+          "autocomplete": "email",
+          "label": "Your Email"
+        },
+        {
+          "type": "tel",
+          "name": "phone",
+          "id": "cphone",
+          "required": false,
+          "autocomplete": "tel",
+          "label": "Phone (optional)"
+        },
+        {
+          "type": "textarea",
+          "name": "message",
+          "id": "cmessage",
+          "required": true,
+          "rows": 4,
+          "label": "Your Message"
+        }
+      ],
+      "submitLabel": "Send Message"
+    }
+  },
+  "footer": {
+    "brand": "Bhavy Upreti",
+    "copy": "© 2026 All Rights Reserved",
+    "topHref": "#hero",
+    "topLabel": "Back to Top"
+  }
+}

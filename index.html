@@ -43,7 +43,7 @@
   <script src="https://kit.fontawesome.com/84aa792419.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body class="hide-scrollbar">
   <!-- Film grain overlay -->
   <div class="grain" aria-hidden="true"></div>
 
@@ -97,7 +97,7 @@
 
   <!-- Mobile Menu Overlay -->
   <div class="mobile-menu" id="mobileMenu">
-    <nav class="mobile-menu__nav">
+    <nav class="mobile-menu__nav" id="mobileMenuNav">
       <a href="#origin" class="mobile-menu__link">Origin</a>
       <a href="#about" class="mobile-menu__link">About</a>
       <a href="#skills" class="mobile-menu__link">Expertise</a>
@@ -105,14 +105,14 @@
       <a href="#journey" class="mobile-menu__link">Journey</a>
       <a href="#contact" class="mobile-menu__link">Contact</a>
     </nav>
-    <div class="mobile-menu__footer">
+    <div class="mobile-menu__footer" id="mobileMenuFooter">
       <a href="https://github.com/bhavyup" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/bhavy-upreti-772b6b331" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://instagram.com/bhavy_upreti" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
 
-  <main>
+  <main class="hide-scrollbar">
     <!-- ========== HERO ========== -->
     <section class="hero" id="hero">
       <div class="hero__grid-bg" aria-hidden="true"></div>
@@ -156,7 +156,7 @@
         </div>
 
         <!-- Hero Stats -->
-        <div class="hero__stats" data-reveal data-delay="5">
+        <div class="hero__stats" id="heroStats" data-reveal data-delay="5">
           <div class="hero__stat">
             <span class="hero__stat-num">3+</span>
             <span class="hero__stat-label">Years Building</span>
@@ -201,45 +201,53 @@
     <section class="section origin" id="origin">
       <div class="container origin__intro" data-reveal>
         <span class="section__number">00</span>
-        <h2 class="section__title origin__title">Rise Sequence</h2>
+        <h2 class="section__title origin__title">Frame Reactor</h2>
         <p class="origin__lede">
-          Scroll to power up the scene. The skyline bends, the shards align, and the emblem charges like a superhero
-          origin montage.
+          A four-scene micro-film controlled by your scroll. The reactor locks, the frame rails ignite, and the
+          sequence resolves into full power.
         </p>
       </div>
 
       <div class="origin__track" aria-hidden="true">
         <div class="origin__sticky" id="originScene">
-          <div class="origin__atmosphere"></div>
-          <div class="origin__rings"></div>
-          <div class="origin__city origin__city--far"></div>
-          <div class="origin__city origin__city--near"></div>
+          <div class="origin__noise"></div>
+          <div class="origin__grid"></div>
+          <div class="origin__beam"></div>
+          <div class="origin__film origin__film--left"></div>
+          <div class="origin__film origin__film--right"></div>
 
-          <div class="origin__emblem-wrap">
-            <div class="origin__emblem"></div>
+          <div class="origin__core-wrap">
+            <div class="origin__core"></div>
             <span class="origin__charge" id="originCharge">0%</span>
           </div>
 
-          <div class="origin__cards">
+          <ol class="origin__timeline" id="originTimeline">
+            <li class="origin__timeline-item is-active">Boot</li>
+            <li class="origin__timeline-item">Align</li>
+            <li class="origin__timeline-item">Forge</li>
+            <li class="origin__timeline-item">Launch</li>
+          </ol>
+
+          <div class="origin__cards" id="originCards">
             <article class="origin-card origin-card--one">
-              <p class="origin-card__kicker">Phase 01</p>
-              <h3>Signal Ignition</h3>
-              <p>Raw idea turns into pulse and direction.</p>
+              <p class="origin-card__kicker">Scene 01</p>
+              <h3>Signal Intake</h3>
+              <p>Loose ideas enter the chamber and get a clear direction.</p>
             </article>
             <article class="origin-card origin-card--two">
-              <p class="origin-card__kicker">Phase 02</p>
-              <h3>Armor Assembly</h3>
-              <p>Design, code and systems lock into one frame.</p>
+              <p class="origin-card__kicker">Scene 02</p>
+              <h3>Constraint Lock</h3>
+              <p>Design and engineering snap to one measurable system.</p>
             </article>
             <article class="origin-card origin-card--three">
-              <p class="origin-card__kicker">Phase 03</p>
-              <h3>Skyline Launch</h3>
-              <p>Every pixel moves with purpose under scroll force.</p>
+              <p class="origin-card__kicker">Scene 03</p>
+              <h3>Frame Fabrication</h3>
+              <p>Visual rhythm, interaction, and structure forge together.</p>
             </article>
             <article class="origin-card origin-card--four">
-              <p class="origin-card__kicker">Phase 04</p>
-              <h3>Hero Mode</h3>
-              <p>Experience becomes cinematic and unmistakably yours.</p>
+              <p class="origin-card__kicker">Scene 04</p>
+              <h3>Flight State</h3>
+              <p>Final output: minimal, cinematic, and unmistakably precise.</p>
             </article>
           </div>
         </div>
@@ -330,7 +338,7 @@
 
       <!-- Infinite scrolling marquee -->
       <div class="marquee" data-reveal aria-label="Technologies I work with">
-        <div class="marquee__track">
+        <div class="marquee__track" id="skillsMarqueeTrack">
           <span class="marquee__item">JavaScript</span><span class="marquee__sep">/</span>
           <span class="marquee__item">React</span><span class="marquee__sep">/</span>
           <span class="marquee__item">Node.js</span><span class="marquee__sep">/</span>
@@ -372,7 +380,7 @@
       </div>
 
       <div class="container">
-        <div class="skills__grid">
+        <div class="skills__grid" id="skillsGrid">
           <div class="skill-group" data-reveal>
             <h3 class="skill-group__title">Languages</h3>
             <ul class="skill-group__list">
@@ -436,9 +444,12 @@
           <h2 class="section__title">Selected Work</h2>
         </div>
 
-        <div class="projects">
+        <div class="projects" id="projectsList">
           <article class="project" data-reveal>
-            <a href="https://calculator-bhavy.netlify.app" class="project__image" target="_blank" rel="noopener">
+            <a href="https://calculator-bhavy.netlify.app" class="project__image" target="_blank" rel="noopener"
+              data-demo-url="https://calculator-bhavy.netlify.app" data-placeholder-src="./assets/images/Calculator.png"
+              data-placeholder-alt="Calculator App Screenshot">
+              <iframe class="project__preview" title="Calculator live demo preview" loading="lazy" aria-hidden="true"></iframe>
               <img src="./assets/images/Calculator.png" alt="Calculator App Screenshot" loading="lazy">
               <span class="project__image-overlay">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -477,7 +488,10 @@
           </article>
 
           <article class="project project--reverse" data-reveal>
-            <a href="https://bhavyup.github.io/My-Portfolio/" class="project__image" target="_blank" rel="noopener">
+            <a href="https://bhavyup.github.io/My-Portfolio/" class="project__image" target="_blank" rel="noopener"
+              data-demo-url="https://bhavyup.github.io/My-Portfolio/" data-placeholder-src="./assets/images/Portfolio.png"
+              data-placeholder-alt="Portfolio Website Screenshot">
+              <iframe class="project__preview" title="Portfolio live demo preview" loading="lazy" aria-hidden="true"></iframe>
               <img src="./assets/images/Portfolio.png" alt="Portfolio Website Screenshot" loading="lazy">
               <span class="project__image-overlay">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -551,7 +565,7 @@
               </svg>
               Education
             </h3>
-            <div class="timeline">
+            <div class="timeline" id="educationTimeline">
               <div class="timeline__item">
                 <div class="timeline__dot" aria-hidden="true"></div>
                 <div class="timeline__content">
@@ -594,7 +608,7 @@
               </svg>
               Certifications
             </h3>
-            <div class="certs">
+            <div class="certs" id="certsList">
               <div class="cert">
                 <span class="cert__icon" aria-hidden="true">&#9670;</span>
                 <a href="https://freecodecamp.org/certification/bhavyupreti/responsive-web-design-v9"
@@ -704,7 +718,7 @@
               </svg>
               Currently Exploring
             </h3>
-            <div class="interests">
+            <div class="interests" id="interestsList">
               <div class="interest">
                 <span class="interest__emoji">&#9729;&#65039;</span>
                 <div>
@@ -758,10 +772,10 @@
               Have a project in mind or just want to connect? I'd love to hear from you.
             </p>
 
-            <div class="contact__details">
+            <div class="contact__details" id="contactDetails">
               <div class="contact__item">
                 <span class="contact__label"><i class="fa-solid fa-map"></i> Location</span>
-                <address class="contact__value">Nainital, Uttarakhand</address>
+                <a class="contact__value">Nainital, Uttarakhand</a>
               </div>
               <div class="contact__item">
                 <span class="contact__label"><i class="fa-solid fa-envelope"></i> Email</span>
@@ -775,7 +789,7 @@
               </div>
             </div>
 
-            <div class="contact__socials">
+            <div class="contact__socials" id="contactSocials">
               <a href="https://github.com/bhavyup" target="_blank" rel="noopener">
                 <i class="fa-brands fa-github" aria-hidden="true"></i>
                 <span>GitHub</span>
