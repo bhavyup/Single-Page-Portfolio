@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const bcrypt = require("bcryptjs");
 const request = require("supertest");
 
@@ -10,11 +11,15 @@ describe("App admin and auth flow", () => {
   let app;
   let agent;
   let state;
+  let uploadDir;
 
   beforeAll(() => {
+    uploadDir = fs.mkdtempSync(path.join(os.tmpdir(), "portfolio-assets-"));
+
     process.env.NODE_ENV = "test";
     process.env.PORT = "0";
     process.env.STORAGE_DRIVER = "file";
+    process.env.ASSET_UPLOAD_DIR = uploadDir;
     process.env.ADMIN_USERNAME = "admin";
     process.env.ADMIN_PASSWORD_HASH = bcrypt.hashSync("AdminPass#123", 8);
     process.env.JWT_SECRET = "jwt-secret-admin-flow-tests";
@@ -59,6 +64,10 @@ describe("App admin and auth flow", () => {
   });
 
   afterAll(() => {
+    if (uploadDir) {
+      fs.rmSync(uploadDir, { recursive: true, force: true });
+    }
+
     jest.dontMock("../server/contentStore");
     jest.dontMock("../server/auditStore");
     jest.resetModules();
@@ -72,6 +81,9 @@ describe("App admin and auth flow", () => {
     const adminRes = await request(app).get("/admin/index.html");
     expect(adminRes.statusCode).toBe(200);
     expect(adminRes.headers["cache-control"]).toContain("no-store");
+
+    const faviconRes = await request(app).get("/favicon.ico");
+    expect(faviconRes.statusCode).toBe(200);
 
     const blockedPackage = await request(app).get("/package.json");
     expect(blockedPackage.statusCode).toBe(404);
@@ -203,6 +215,39 @@ describe("App admin and auth flow", () => {
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body.data)).toBe(true);
     expect(res.body.data.length).toBeGreaterThan(0);
+
+    res = await agent.get("/admin/api/assets");
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body.data)).toBe(true);
+
+    res = await agent
+      .post("/admin/api/assets")
+      .set("x-csrf-token", csrfToken)
+      .attach("asset", Buffer.from("demo text asset"), "portfolio-note.txt");
+    expect(res.statusCode).toBe(201);
+    expect(res.body.data).toHaveProperty("url");
+
+    const uploadedName = res.body.data.name;
+
+    res = await agent.get("/admin/api/assets");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.some((asset) => asset.name === uploadedName)).toBe(true);
+    const uploadedAsset = res.body.data.find((asset) => asset.name === uploadedName);
+    expect(uploadedAsset).toBeTruthy();
+    expect(uploadedAsset.source).toBe("local-upload");
+    expect(uploadedAsset.deletable).toBe(true);
+
+    res = await agent
+      .delete("/admin/api/assets")
+      .set("x-csrf-token", csrfToken)
+      .send({
+        id: uploadedAsset.id,
+        source: uploadedAsset.source,
+        name: uploadedAsset.name,
+        url: uploadedAsset.url,
+      });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.ok).toBe(true);
 
     res = await agent.post("/admin/auth/logout");
     expect(res.statusCode).toBe(200);

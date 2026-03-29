@@ -380,9 +380,9 @@
           "HTML",
           "CSS"
         ],
-        "liveDemo": "https://calculator-bhavy.netlify.app",
+        "liveDemo": "https://calculator-bhavy1.netlify.app",
         "sourceCode": "https://github.com/bhavyup/Calculator",
-        "placeholderSrc": "./assets/images/Calculator.png",
+        "placeholderSrc": "/assets/uploads/1774818668519-5ncggj-headshot.jpg",
         "placeholderAlt": "Calculator App Screenshot"
       },
       {

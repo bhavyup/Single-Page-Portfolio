@@ -21,6 +21,7 @@ const state = {
   dockOffsetX: 0,
   dockOffsetY: 0,
   confirmResolver: null,
+  assets: [],
 };
 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -37,6 +38,11 @@ const activeTitle = $("#activeTitle");
 const workspaceHelp = $(".workspace-help");
 const globalStatus = $("#globalStatus");
 const auditList = $("#auditList");
+const assetList = $("#assetList");
+const assetUploadForm = $("#assetUploadForm");
+const assetFileInput = $("#assetFileInput");
+const assetUploadHint = $("#assetUploadHint");
+const assetUrlOptions = $("#assetUrlOptions");
 const toastStack = $("#toastStack");
 const floatingTooltip = $("#floatingTooltip");
 const actionDock = $("#actionDock");
@@ -208,12 +214,14 @@ function openConfirmModal({ title, message, confirmLabel = "Confirm", danger = f
 }
 
 function createRequestHeaders(options = {}) {
+  const hasFormDataBody =
+    typeof FormData !== "undefined" && options.body instanceof FormData;
   const hasExplicitContentType = Object.keys(options.headers || {}).some(
     (key) => key.toLowerCase() === "content-type",
   );
 
   return {
-    ...(hasExplicitContentType ? {} : { "content-type": "application/json" }),
+    ...(hasExplicitContentType || hasFormDataBody ? {} : { "content-type": "application/json" }),
     ...(state.csrfToken ? { "x-csrf-token": state.csrfToken } : {}),
     ...(options.headers || {}),
   };
@@ -284,6 +292,133 @@ function formatStorageMode(storage) {
   }
 
   return "File";
+}
+
+function formatBytes(size) {
+  const bytes = Number(size || 0);
+  if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function assetSourceLabel(source) {
+  const map = {
+    blob: "Blob Upload",
+    "local-upload": "Local Upload",
+    "local-static": "Bundled Asset",
+  };
+  return map[source] || "Asset";
+}
+
+function isLinkLikePath(path) {
+  const key = String(path[path.length - 1] || "").toLowerCase();
+  return ["href", "src", "url", "file", "image", "video", "pdf", "document"].some((token) =>
+    key.includes(token),
+  );
+}
+
+function renderAssetOptions() {
+  if (!assetUrlOptions) return;
+  assetUrlOptions.innerHTML = state.assets
+    .map((asset) => `<option value="${escapeHtml(asset.url)}">${escapeHtml(asset.name)}</option>`)
+    .join("");
+}
+
+function renderAssetList() {
+  if (!assetList) return;
+
+  if (!state.assets.length) {
+    assetList.innerHTML = "<li>No uploaded assets yet.</li>";
+    renderAssetOptions();
+    return;
+  }
+
+  assetList.innerHTML = state.assets
+    .map((asset) => {
+      const deleteButton = asset.deletable
+        ? `<button type="button" class="ghost danger" data-delete-asset-id="${escapeHtml(asset.id || "")}" data-delete-asset-source="${escapeHtml(asset.source || "")}" data-delete-asset-name="${escapeHtml(asset.name || "")}" data-delete-asset-url="${escapeHtml(asset.url || "")}">Delete</button>`
+        : "";
+
+      return `<li><strong>${escapeHtml(asset.name)}</strong><span class="asset-list__meta">${escapeHtml(assetSourceLabel(asset.source))} • ${escapeHtml(asset.url)} • ${escapeHtml(formatBytes(asset.size))} • ${escapeHtml(formatTime(asset.uploadedAt))}</span><div class="asset-list__actions"><button type="button" class="ghost" data-copy-asset-url="${escapeHtml(asset.url)}">Copy URL</button>${deleteButton}</div></li>`;
+    })
+    .join("");
+
+  renderAssetOptions();
+}
+
+async function loadAssets(showErrors = false) {
+  if (!assetList) return;
+
+  try {
+    const res = await request("/admin/api/assets", { method: "GET" });
+    state.assets = Array.isArray(res.data)
+      ? res.data.map((asset) => ({
+          ...asset,
+          deletable: Boolean(asset.deletable),
+          source: asset.source || "blob",
+        }))
+      : [];
+    renderAssetList();
+
+    if (assetUploadHint) {
+      assetUploadHint.textContent = "Allowed: images, videos, pdf/docs, txt, zip (max 25MB)";
+    }
+  } catch (error) {
+    state.assets = [];
+    renderAssetList();
+    if (assetUploadHint) {
+      assetUploadHint.textContent = error.message;
+    }
+    if (showErrors) {
+      showToast(error.message, "error");
+    }
+  }
+}
+
+async function copyAssetUrl(url) {
+  try {
+    const clipboard = window?.navigator?.clipboard;
+    if (!clipboard) {
+      throw new Error("Clipboard unavailable");
+    }
+    await clipboard.writeText(url);
+    showToast("Asset URL copied.", "success");
+  } catch {
+    showToast("Copy failed. Copy manually from the list.", "warn");
+  }
+}
+
+async function deleteAsset(asset) {
+  if (!asset || !asset.deletable) {
+    showToast("This asset is read-only.", "warn");
+    return;
+  }
+
+  const ok = await openConfirmModal({
+    title: "Delete Asset",
+    message: `Delete ${asset.name}? This cannot be undone.`,
+    confirmLabel: "Delete",
+    danger: true,
+  });
+  if (!ok) return;
+
+  try {
+    await request("/admin/api/assets", {
+      method: "DELETE",
+      body: JSON.stringify({
+        id: asset.id,
+        source: asset.source,
+        name: asset.name,
+        url: asset.url,
+      }),
+    });
+    await loadAssets(true);
+    await loadAudit();
+    showToast("Asset deleted.", "warn");
+  } catch (error) {
+    showToast(error.message, "error");
+  }
 }
 
 async function loadHealthSummary() {
@@ -491,6 +626,10 @@ function renderPrimitiveField(section, path, value) {
   const pathToken = encodePath(path);
   const label = pathLabel(path[path.length - 1]);
   const fieldType = inferFieldType(value, path);
+  const shouldSuggestAssets = typeof value === "string" && isLinkLikePath(path);
+  const fieldHints = shouldSuggestAssets
+    ? ' list="assetUrlOptions" placeholder="Use /assets/uploads/... or https://..."'
+    : "";
 
   if (typeof value === "boolean") {
     return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><select id="${fieldId}" class="field-select" data-path="${pathToken}" data-section="${section}"><option value="true" ${value ? "selected" : ""}>True</option><option value="false" ${!value ? "selected" : ""}>False</option></select></div>`;
@@ -500,7 +639,7 @@ function renderPrimitiveField(section, path, value) {
     return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><textarea id="${fieldId}" class="field-textarea" data-path="${pathToken}" data-section="${section}">${escapeHtml(value)}</textarea></div>`;
   }
 
-  return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><input id="${fieldId}" class="field-input" type="${fieldType}" data-path="${pathToken}" data-section="${section}" value="${escapeHtml(value)}"></div>`;
+  return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><input id="${fieldId}" class="field-input" type="${fieldType}"${fieldHints} data-path="${pathToken}" data-section="${section}" value="${escapeHtml(value)}"></div>`;
 }
 
 function renderNode(section, path, node) {
@@ -652,6 +791,7 @@ async function bootstrapPanel() {
   await ensureCsrf();
   await loadContent();
   await loadAudit();
+  await loadAssets();
 
   authCard.classList.add("hidden");
   adminPanel.classList.remove("hidden");
@@ -927,10 +1067,57 @@ refreshBtn?.addEventListener("click", async () => {
   try {
     await loadContent();
     await loadAudit();
+    await loadAssets();
     showToast("Reloaded latest live content from API.", "success");
   } catch (error) {
     setGlobalStatus(error.message, true);
     showToast(error.message, "error");
+  }
+});
+
+assetUploadForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const file = assetFileInput?.files?.[0];
+  if (!file) {
+    showToast("Select a file first.", "warn");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("asset", file);
+
+  try {
+    await request("/admin/api/assets", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (assetFileInput) assetFileInput.value = "";
+    await loadAssets(true);
+    await loadAudit();
+    showToast("Asset uploaded.", "success");
+  } catch (error) {
+    showToast(error.message, "error");
+  }
+});
+
+assetList?.addEventListener("click", async (event) => {
+  const copyButton = event.target.closest("[data-copy-asset-url]");
+  if (copyButton) {
+    await copyAssetUrl(copyButton.dataset.copyAssetUrl || "");
+    return;
+  }
+
+  const deleteButton = event.target.closest("[data-delete-asset-id]");
+  if (deleteButton) {
+    await deleteAsset({
+      id: deleteButton.dataset.deleteAssetId || "",
+      source: deleteButton.dataset.deleteAssetSource || "",
+      name: deleteButton.dataset.deleteAssetName || "",
+      url: deleteButton.dataset.deleteAssetUrl || "",
+      deletable: true,
+    });
   }
 });
 

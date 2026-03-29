@@ -5,6 +5,8 @@ const helmetModule = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimitModule = require("express-rate-limit");
 const morgan = require("morgan");
+const multer = require("multer");
+const { put, list, del } = require("@vercel/blob");
 const { config, assertConfig } = require("./config");
 const {
   signSession,
@@ -25,6 +27,269 @@ const rateLimit = /** @type {any} */ (
 assertConfig();
 
 const app = express();
+const staticRoot = config.rootDir;
+const faviconPath = path.join(staticRoot, "logo", "logo.png");
+const uploadsDir = path.resolve(config.assetUploadDir);
+const bundledAssetDirs = [
+  path.join(staticRoot, "assets", "images"),
+  path.join(staticRoot, "assets", "resume"),
+];
+const blobPrefix = String(config.assets.blobPrefix || "portfolio-assets/")
+  .replace(/^\/+/, "")
+  .replace(/\/?$/, "/");
+
+const allowedAssetExtensions = new Set([
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".svg",
+  ".mp4",
+  ".webm",
+  ".mov",
+  ".avi",
+  ".m4v",
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".ppt",
+  ".pptx",
+  ".xls",
+  ".xlsx",
+  ".txt",
+  ".zip",
+]);
+
+function sanitizeAssetBaseName(name) {
+  return String(name || "asset")
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64) || "asset";
+}
+
+function toAssetPublicUrl(fileName) {
+  return `/assets/uploads/${encodeURIComponent(fileName)}`;
+}
+
+function normalizeSlashes(value) {
+  return String(value || "").replace(/\\/g, "/");
+}
+
+function toStaticAssetUrl(relativeFilePath) {
+  const normalized = normalizeSlashes(relativeFilePath).replace(/^\/+/, "");
+  return `/${encodeURI(normalized)}`;
+}
+
+function stripBlobPrefix(pathName) {
+  const normalized = normalizeSlashes(pathName);
+  if (normalized.startsWith(blobPrefix)) {
+    return normalized.slice(blobPrefix.length);
+  }
+
+  return normalized;
+}
+
+function isSupportedAssetFile(fileName) {
+  const ext = path.extname(fileName || "").toLowerCase();
+  return allowedAssetExtensions.has(ext);
+}
+
+function buildAssetFilename(originalName) {
+  const ext = path.extname(originalName || "").toLowerCase();
+  const baseName = sanitizeAssetBaseName(path.basename(originalName || "asset", ext));
+  const random = Math.random().toString(36).slice(2, 8);
+  return `${Date.now()}-${random}-${baseName}${ext}`;
+}
+
+async function listUploadedAssets() {
+  const entries = await fs.promises.readdir(uploadsDir, { withFileTypes: true }).catch((error) => {
+    if (error && error.code === "ENOENT") return [];
+    throw error;
+  });
+
+  const files = entries.filter((entry) => entry.isFile()).map((entry) => entry.name);
+  const assets = await Promise.all(
+    files.map(async (fileName) => {
+      const filePath = path.join(uploadsDir, fileName);
+      const stats = await fs.promises.stat(filePath).catch(() => null);
+      if (!stats || !stats.isFile()) return null;
+      return {
+        name: fileName,
+        url: toAssetPublicUrl(fileName),
+        size: stats.size,
+        uploadedAt: stats.mtime.toISOString(),
+      };
+    }),
+  );
+
+  return assets
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+}
+
+async function collectFilesRecursive(dirPath) {
+  const entries = await fs.promises.readdir(dirPath, { withFileTypes: true }).catch((error) => {
+    if (error && error.code === "ENOENT") return [];
+    throw error;
+  });
+
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      const nested = await collectFilesRecursive(fullPath);
+      files.push(...nested);
+      continue;
+    }
+
+    if (entry.isFile() && isSupportedAssetFile(entry.name)) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
+async function listBundledAssets() {
+  const assets = [];
+
+  for (const dirPath of bundledAssetDirs) {
+    const files = await collectFilesRecursive(dirPath);
+
+    for (const filePath of files) {
+      const stats = await fs.promises.stat(filePath).catch(() => null);
+      if (!stats || !stats.isFile()) continue;
+
+      const relativeFromRoot = normalizeSlashes(path.relative(staticRoot, filePath));
+      assets.push({
+        id: `local-static:${relativeFromRoot}`,
+        name: relativeFromRoot,
+        url: toStaticAssetUrl(relativeFromRoot),
+        size: stats.size,
+        uploadedAt: stats.mtime.toISOString(),
+        source: "local-static",
+        deletable: false,
+      });
+    }
+  }
+
+  return assets;
+}
+
+async function listLocalUploadedAssets() {
+  if (!uploadDirectoryReady) return [];
+
+  const assets = await listUploadedAssets();
+  return assets.map((asset) => ({
+    id: `local-upload:${asset.name}`,
+    name: asset.name,
+    url: asset.url,
+    size: asset.size,
+    uploadedAt: asset.uploadedAt,
+    source: "local-upload",
+    deletable: true,
+  }));
+}
+
+async function listBlobAssets() {
+  if (!config.assets.useBlob) return [];
+
+  const response = await list({
+    token: config.assets.blobToken,
+    prefix: blobPrefix,
+  });
+
+  return (response.blobs || []).map((blob) => ({
+    id: `blob:${blob.url}`,
+    name: stripBlobPrefix(blob.pathname || blob.url),
+    url: blob.url,
+    size: blob.size || 0,
+    uploadedAt: new Date(blob.uploadedAt || Date.now()).toISOString(),
+    source: "blob",
+    deletable: true,
+  }));
+}
+
+async function listAllAssets() {
+  const [blobAssets, localUploadedAssets, bundledAssets] = await Promise.all([
+    config.assets.useBlob ? listBlobAssets() : Promise.resolve([]),
+    listLocalUploadedAssets(),
+    listBundledAssets(),
+  ]);
+
+  const byUrl = new Map();
+  for (const asset of [...blobAssets, ...localUploadedAssets, ...bundledAssets]) {
+    if (!byUrl.has(asset.url)) {
+      byUrl.set(asset.url, asset);
+    }
+  }
+
+  return [...byUrl.values()].sort(
+    (a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime(),
+  );
+}
+
+function resolveLocalUploadName(input) {
+  const safeName = path.basename(String(input || ""));
+  if (!safeName || safeName !== input) {
+    return null;
+  }
+
+  return safeName;
+}
+
+async function deleteLocalUploadByName(assetName) {
+  const safeName = resolveLocalUploadName(assetName);
+  if (!safeName) {
+    const error = new Error("Invalid asset name");
+    /** @type {any} */ (error).status = 400;
+    throw error;
+  }
+
+  const resolvedPath = path.resolve(path.join(uploadsDir, safeName));
+  if (!resolvedPath.startsWith(`${uploadsDir}${path.sep}`)) {
+    const error = new Error("Invalid asset path");
+    /** @type {any} */ (error).status = 400;
+    throw error;
+  }
+
+  try {
+    await fs.promises.unlink(resolvedPath);
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      const notFound = new Error("Asset not found");
+      /** @type {any} */ (notFound).status = 404;
+      throw notFound;
+    }
+    throw error;
+  }
+}
+
+let uploadDirectoryReady = true;
+try {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+} catch {
+  uploadDirectoryReady = false;
+}
+
+const uploadAsset = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    files: 1,
+    fileSize: 25 * 1024 * 1024,
+  },
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname || "").toLowerCase();
+    if (!allowedAssetExtensions.has(ext)) {
+      cb(new Error("Unsupported file type"));
+      return;
+    }
+
+    cb(null, true);
+  },
+});
 
 app.disable("x-powered-by");
 app.use(
@@ -84,6 +349,15 @@ const adminLimiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+app.get("/favicon.ico", (_req, res) => {
+  if (!fs.existsSync(faviconPath)) {
+    return res.status(404).end();
+  }
+
+  res.setHeader("Cache-Control", "public, max-age=86400");
+  return res.sendFile(faviconPath);
 });
 
 app.get("/api/health", (_req, res) => {
@@ -259,6 +533,150 @@ app.get("/admin/api/audit", async (req, res) => {
   }
 });
 
+app.get("/admin/api/assets", async (_req, res) => {
+  try {
+    const assets = await listAllAssets();
+    return res.json({ data: assets });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/admin/api/assets", requireCsrf, (req, res) => {
+  return uploadAsset.single("asset")(req, res, async (uploadError) => {
+    if (uploadError) {
+      if (uploadError instanceof multer.MulterError) {
+        if (uploadError.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ error: "File is too large. Max size is 25 MB." });
+        }
+      }
+
+      return res.status(400).json({ error: uploadError.message || "Upload failed" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const generatedName = buildAssetFilename(req.file.originalname);
+    let createdAsset;
+
+    try {
+      if (config.assets.useBlob) {
+        const blobPath = `${blobPrefix}${generatedName}`;
+        const blob = await put(blobPath, req.file.buffer, {
+          access: "public",
+          addRandomSuffix: false,
+          token: config.assets.blobToken,
+          contentType: req.file.mimetype || undefined,
+        });
+
+        createdAsset = {
+          id: `blob:${blob.url}`,
+          name: stripBlobPrefix(blob.pathname || blobPath),
+          url: blob.url,
+          size: req.file.size,
+          uploadedAt: new Date().toISOString(),
+          source: "blob",
+          deletable: true,
+        };
+      } else {
+        if (!uploadDirectoryReady) {
+          return res.status(503).json({ error: "Asset uploads are not available on this host" });
+        }
+
+        const filePath = path.join(uploadsDir, generatedName);
+        await fs.promises.writeFile(filePath, req.file.buffer);
+
+        createdAsset = {
+          id: `local-upload:${generatedName}`,
+          name: generatedName,
+          url: toAssetPublicUrl(generatedName),
+          size: req.file.size,
+          uploadedAt: new Date().toISOString(),
+          source: "local-upload",
+          deletable: true,
+        };
+      }
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    try {
+      await appendAudit({
+        actor: req.admin.sub,
+        action: "asset.upload",
+        ip: req.ip,
+        userAgent: req.get("user-agent") || "unknown",
+        metadata: {
+          fileName: createdAsset.name,
+          source: createdAsset.source,
+          bytes: req.file.size,
+        },
+      });
+    } catch {}
+
+    return res.status(201).json({
+      ok: true,
+      data: createdAsset,
+    });
+  });
+});
+
+app.delete("/admin/api/assets", requireCsrf, async (req, res) => {
+  const source = String(req.body?.source || "");
+  const id = String(req.body?.id || "");
+  const name = String(req.body?.name || "");
+  const url = String(req.body?.url || "");
+
+  try {
+    if (source === "blob") {
+      if (!config.assets.useBlob) {
+        return res.status(400).json({ error: "Blob asset storage is not enabled" });
+      }
+
+      const blobUrl =
+        url ||
+        (id.startsWith("blob:") ? id.slice("blob:".length) : "");
+      if (!blobUrl) {
+        return res.status(400).json({ error: "Missing blob asset url" });
+      }
+
+      await del(blobUrl, {
+        token: config.assets.blobToken,
+      });
+    } else if (source === "local-upload") {
+      const candidateName = name || (id.startsWith("local-upload:") ? id.slice("local-upload:".length) : "");
+      if (!uploadDirectoryReady) {
+        return res.status(503).json({ error: "Asset uploads are not available on this host" });
+      }
+      await deleteLocalUploadByName(candidateName);
+    } else {
+      return res.status(400).json({ error: "This asset is read-only and cannot be deleted" });
+    }
+  } catch (error) {
+    const status = Number(error.status || 500);
+    return res.status(status).json({ error: error.message });
+  }
+
+  try {
+    await appendAudit({
+      actor: req.admin.sub,
+      action: "asset.delete",
+      ip: req.ip,
+      userAgent: req.get("user-agent") || "unknown",
+      metadata: {
+        source,
+        id,
+        name,
+        url,
+      },
+    });
+  } catch {}
+
+  return res.json({ ok: true });
+});
+
 const adminDir = path.join(__dirname, "public", "admin");
 if (!fs.existsSync(adminDir)) {
   fs.mkdirSync(adminDir, { recursive: true });
@@ -278,7 +696,19 @@ app.use(
   }),
 );
 
-const staticRoot = config.rootDir;
+app.use(
+  "/assets/uploads",
+  express.static(uploadsDir, {
+    index: false,
+    etag: false,
+    lastModified: false,
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "public, max-age=300");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+    },
+  }),
+);
+
 app.use((req, res, next) => {
   const blockedPaths = [
     "/server",
