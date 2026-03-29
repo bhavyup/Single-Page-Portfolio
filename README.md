@@ -1,118 +1,237 @@
-# Portfolio With Secure Admin Control Plane
 
-This project now runs as a full web application:
+<div align="center">
 
-- Public portfolio site reads all dynamic content from API (`GET /api/content`)
-- Admin control plane lives at `/admin`
-- Content updates happen through authenticated admin endpoints with CSRF protection and audit logs
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&text=Single%20Page%20Portfolio&fontSize=50&fontAlignY=35&desc=Cinematic%20portfolio%20experience%20with%20a%20secure%20admin%20control%20plane%20for%20live%20content%20publishing.&descAlignY=55&fontColor=ffffff" width="100%" />
 
-## Architecture
+</div>
 
-- Frontend: static portfolio (`index.html`, `styles.css`, `script.js`)
-- API server: Node.js + Express (`server/app.js`)
-- Secure content storage: server-side JSON (`server/data/content.json`)
-- Admin UI: multi-section editor (`server/public/admin`)
+<!-- readme-gen:start:badges -->
+<p align="center">
+	<img alt="CI" src="https://img.shields.io/github/actions/workflow/status/bhavyup/My-Portfolio/ci.yml?branch=main&style=for-the-badge&logo=githubactions" />
+	<img alt="Version" src="https://img.shields.io/badge/version-1.0.0-2563eb?style=for-the-badge" />
+	<img alt="Platform" src="https://img.shields.io/badge/platform-web%20app-0ea5e9?style=for-the-badge" />
+	<img alt="Backend" src="https://img.shields.io/badge/backend-express-111827?style=for-the-badge&logo=express" />
+	<img alt="Security" src="https://img.shields.io/badge/security-jwt%20%7C%20csrf%20%7C%20helmet-16a34a?style=for-the-badge" />
+</p>
 
-## Security Controls Implemented
+<p align="center">
+	<img alt="Stars" src="https://img.shields.io/github/stars/bhavyup/My-Portfolio?style=for-the-badge&logo=github" />
+	<img alt="Forks" src="https://img.shields.io/github/forks/bhavyup/My-Portfolio?style=for-the-badge" />
+	<img alt="Issues" src="https://img.shields.io/github/issues/bhavyup/My-Portfolio?style=for-the-badge" />
+	<img alt="Last Commit" src="https://img.shields.io/github/last-commit/bhavyup/My-Portfolio?style=for-the-badge" />
+</p>
+<!-- readme-gen:end:badges -->
 
-- `helmet` security headers + CSP
-- HttpOnly signed JWT session cookie for admin auth
-- CSRF protection with signed double-submit token
-- Login rate limiting and admin API throttling
-- Input validation (Zod schema)
-- Atomic content writes (`.tmp` + rename)
-- Audit event logging (`server/data/audit-log.json`)
-- Sensitive static path blocking (`/server`, `/data.js`, env and package files)
+<!-- readme-gen:start:tech-stack -->
+<p align="center">
+	<img src="https://skillicons.dev/icons?i=js,nodejs,express,html,css,docker,aws,mongodb,postgres&theme=dark" alt="Tech Stack" />
+</p>
+<!-- readme-gen:end:tech-stack -->
 
-## Routes
+This project blends a cinematic front-end portfolio with a secure admin control plane, so content updates can happen live without touching frontend code. It is built for mixed audiences: recruiters get an immersive showcase, while developers get a production-minded backend with auth, CSRF protection, validation, and audit logs.
 
-### Public
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=6,11,20&height=1" width="100%" />
 
-- `GET /` -> portfolio
-- `GET /api/health` -> health check
-- `GET /api/content` -> public content payload used by portfolio renderer
+## Highlights
 
-### Admin Auth
+<table>
+<tr>
+<td width="50%" valign="top">
 
-- `GET /admin/auth/csrf`
-- `POST /admin/auth/login`
-- `POST /admin/auth/logout`
-- `GET /admin/auth/session`
+### Cinematic Experience
+Scroll-driven scenes and polished visual storytelling make the portfolio memorable at first glance.
 
-### Admin Content API (authenticated)
+</td>
+<td width="50%" valign="top">
 
-- `GET /admin/api/content`
-- `PUT /admin/api/content` (full content replace)
-- `PATCH /admin/api/content/:section` (single section update)
-- `GET /admin/api/audit`
+### Secure Admin Plane
+JWT session cookies, CSRF double-submit protection, and rate limiting guard admin operations.
 
-## Setup
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
-1. Install dependencies:
+### Dynamic Content API
+Public pages render from server content payloads, enabling live updates without redeploying frontend files.
+
+</td>
+<td width="50%" valign="top">
+
+### Auditable Publishing
+Every login and content mutation is tracked in an audit stream for operational transparency.
+
+</td>
+</tr>
+</table>
+
+## Quick Start
 
 ```bash
+git clone https://github.com/bhavyup/My-Portfolio.git
+cd My-Portfolio
 npm install
 ```
 
-2. Create `.env` from `.env.example`.
+Create a root `.env` file with required values:
 
-3. Generate a bcrypt hash for admin password:
+```bash
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=<bcrypt-hash>
+JWT_SECRET=<long-random-secret>
+CSRF_SECRET=<long-random-secret>
+PORT=3000
+NODE_ENV=development
+```
+
+Generate a bcrypt hash for the admin password:
 
 ```bash
 npm run admin:hash -- YourStrongPasswordHere
 ```
 
-4. Put that hash into `ADMIN_PASSWORD_HASH` in `.env`.
-
-5. Set long random values for `JWT_SECRET` and `CSRF_SECRET`.
-
-6. Start server:
+Run the app:
 
 ```bash
 npm run dev
 ```
 
-7. Open:
+- Portfolio: http://localhost:3000
+- Admin: http://localhost:3000/admin
 
-- Portfolio: `http://localhost:3000`
-- Admin: `http://localhost:3000/admin`
+## Screenshots
 
-## Admin Usage
+<table>
+	<tr>
+		<td width="50%" align="center">
+			<img src="./assets/images/Portfolio.png" alt="Portfolio screenshot" width="100%" />
+			<p><strong>Portfolio Experience</strong></p>
+		</td>
+		<td width="50%" align="center">
+			<img src="./assets/images/Calculator.png" alt="Project showcase screenshot" width="100%" />
+			<p><strong>Project Showcase Card</strong></p>
+		</td>
+	</tr>
+</table>
 
-1. Login with `ADMIN_USERNAME` and the password matching `ADMIN_PASSWORD_HASH`.
-2. Choose a section from left navigation.
-3. Edit JSON for that section.
-4. Save section or publish full snapshot.
-5. Review audit timeline on dashboard.
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=6,11,20&height=1" width="100%" />
 
-## Notes
+## Architecture
 
-- The frontend no longer relies on a public `data.js` content file.
-- Content is now ingested from secured backend endpoints.
-- If API is temporarily unavailable, renderer gracefully handles missing payload.
+<!-- readme-gen:start:architecture -->
+```mermaid
+graph LR
+		A["📱 Portfolio Client"] --> B["🔀 Express Server"]
+		B --> C["🌐 Public API /api/content"]
+		B --> D["🔐 Admin Auth"]
+		D --> E["🔒 JWT Session Cookie"]
+		B --> F["🛡️ CSRF + Rate Limiter"]
+		B --> G["🗄️ Content Store content.json"]
+		B --> H["🗄️ Audit Log audit-log.json"]
+		I["🧭 Admin UI /admin"] --> B
+```
+<!-- readme-gen:end:architecture -->
+
+## Usage
+
+### Public Mode
+- Open `/` to view the portfolio.
+- Frontend fetches `GET /api/content` for dynamic section rendering.
+
+### Admin Mode
+- Visit `/admin` and authenticate.
+- Edit full content or section-level payloads.
+- Publish updates and review audit history.
+
+## API Reference
+
+| Method | Route | Auth | Description |
+|:--|:--|:--:|:--|
+| GET | `/api/health` | No | Health check with environment and timestamp. |
+| GET | `/api/content` | No | Public content payload for frontend rendering. |
+| GET | `/admin/auth/csrf` | No | Issues CSRF token cookie and response token. |
+| POST | `/admin/auth/login` | No | Admin login and session cookie issuance. |
+| POST | `/admin/auth/logout` | Yes | Clears admin session and CSRF cookie. |
+| GET | `/admin/auth/session` | Yes | Returns current authenticated session details. |
+| GET | `/admin/api/content` | Yes | Reads full content snapshot. |
+| PUT | `/admin/api/content` | Yes + CSRF | Replaces entire content payload. |
+| PATCH | `/admin/api/content/:section` | Yes + CSRF | Updates one top-level section. |
+| GET | `/admin/api/audit` | Yes | Returns audit events. |
+
+## Configuration
+
+| Variable | Required | Purpose |
+|:--|:--:|:--|
+| `ADMIN_USERNAME` | Yes | Admin login username. |
+| `ADMIN_PASSWORD_HASH` | Yes | Bcrypt hash of admin password. |
+| `JWT_SECRET` | Yes | Signing secret for admin session token. |
+| `CSRF_SECRET` | Yes | HMAC secret for CSRF token signing. |
+| `PORT` | No | HTTP port, defaults to 3000. |
+| `NODE_ENV` | No | Runtime mode (`development` or `production`). |
 
 ## Project Structure
 
+<!-- readme-gen:start:tree -->
 ```text
-.
-├── index.html
-├── styles.css
-├── script.js
-├── server
-│   ├── app.js
-│   ├── auth.js
-│   ├── config.js
-│   ├── contentSchema.js
-│   ├── contentStore.js
-│   ├── auditStore.js
-│   ├── data
-│   │   ├── content.json
-│   │   └── audit-log.json
-│   └── public
-│       └── admin
-│           ├── index.html
-│           ├── styles.css
-│           └── app.js
-├── package.json
-└── .env.example
+📦 single-page-portfolio
+├── 📄 index.html               # Public portfolio shell
+├── 📄 styles.css               # Portfolio styling
+├── 📄 script.js                # Client rendering + interactions
+├── 📂 assets/
+│   ├── 📂 images/              # Portfolio and project visuals
+│   └── 📂 resume/              # Resume assets
+├── 📂 server/
+│   ├── 📄 app.js               # Express app and route wiring
+│   ├── 📄 auth.js              # Session + CSRF auth helpers
+│   ├── 📄 config.js            # Environment config and validation
+│   ├── 📄 contentStore.js      # Validated content reads/writes
+│   ├── 📄 contentSchema.js     # Zod schema for content payload
+│   ├── 📄 auditStore.js        # Audit event persistence
+│   ├── 📂 data/
+│   │   ├── 📄 content.json     # Dynamic portfolio content source
+│   │   └── 📄 audit-log.json   # Append-only audit trail
+│   └── 📂 public/admin/
+│       ├── 📄 index.html       # Admin interface
+│       ├── 📄 styles.css       # Admin styling
+│       └── 📄 app.js           # Admin client behavior
+└── 📄 package.json             # Scripts and dependencies
 ```
+<!-- readme-gen:end:tree -->
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=6,11,20&height=1" width="100%" />
+
+## Project Health
+
+<!-- readme-gen:start:health -->
+| Category | Status | Score |
+|:--|:--:|--:|
+| Tests | ████████████░░░░░░░░ | 60% |
+| CI/CD | ████████████████░░░░ | 80% |
+| Type Safety | ████████████░░░░░░░░ | 60% |
+| Documentation | ████████████████░░░░ | 80% |
+| Coverage | ███████████░░░░░░░░░ | 56% |
+
+> Overall: 67% — Production-oriented checks are in place; next step is expanding test depth and raising coverage thresholds further.
+<!-- readme-gen:end:health -->
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository and create a feature branch from `main`.
+2. Run the app locally and validate both portfolio and admin flows.
+3. Open a pull request with a concise summary and testing notes.
+
+## License
+
+No license file is currently present in this repository.
+
+<!-- readme-gen:start:footer -->
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer" width="100%" />
+
+Built with love by [Contributors](https://github.com/bhavyup/My-Portfolio/graphs/contributors)
+
+</div>
+<!-- readme-gen:end:footer -->

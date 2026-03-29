@@ -1,9 +1,9 @@
 const path = require("path");
 const fs = require("fs");
 const express = require("express");
-const helmet = require("helmet");
+const helmetModule = require("helmet");
 const cookieParser = require("cookie-parser");
-const rateLimit = require("express-rate-limit");
+const rateLimitModule = require("express-rate-limit");
 const morgan = require("morgan");
 const { config, assertConfig } = require("./config");
 const {
@@ -16,6 +16,11 @@ const {
 } = require("./auth");
 const { readContent, writeContent } = require("./contentStore");
 const { appendAudit, readAuditLog } = require("./auditStore");
+
+const helmet = /** @type {any} */ (helmetModule.default || helmetModule);
+const rateLimit = /** @type {any} */ (
+  rateLimitModule.default || rateLimitModule
+);
 
 assertConfig();
 
@@ -283,6 +288,17 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: message });
 });
 
-app.listen(config.port, () => {
-  console.log(`Server running on http://localhost:${config.port}`);
-});
+function startServer() {
+  return app.listen(config.port, () => {
+    console.log(`Server running on http://localhost:${config.port}`);
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  startServer,
+};

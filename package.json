@@ -7,7 +7,13 @@
   "scripts": {
     "dev": "node server/app.js",
     "start": "node server/app.js",
-    "admin:hash": "node -e \"const bcrypt=require('bcryptjs');const pwd=process.argv[1];if(!pwd){console.error('Usage: npm run admin:hash -- <password>');process.exit(1);}console.log(bcrypt.hashSync(pwd,12));\""
+    "admin:hash": "node -e \"const bcrypt=require('bcryptjs');const pwd=process.argv[1];if(!pwd){console.error('Usage: npm run admin:hash -- <password>');process.exit(1);}console.log(bcrypt.hashSync(pwd,12));\"",
+    "lint": "eslint \"server/**/*.js\" \"tests/**/*.js\"",
+    "typecheck": "tsc -p jsconfig.node.json --noEmit",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --coverage --runInBand",
+    "audit": "npm audit --audit-level=high",
+    "check": "npm run lint && npm run typecheck && npm run test:coverage && npm run audit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -19,5 +25,13 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.5.2",
+    "eslint": "^9.36.0",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4",
+    "typescript": "^5.9.3"
   }
 }
