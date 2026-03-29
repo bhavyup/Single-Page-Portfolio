@@ -19,6 +19,8 @@ pnpm-debug.log*
 
 coverage/
 .nyc_output/
+design-system/
+.venv/
 
 .DS_Store
 Thumbs.db
