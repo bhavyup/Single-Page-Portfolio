@@ -207,28 +207,55 @@ function openConfirmModal({ title, message, confirmLabel = "Confirm", danger = f
   });
 }
 
-async function request(url, options = {}) {
-  const res = await fetch(url, {
-    credentials: "include",
-    ...options,
-    headers: {
-      "content-type": "application/json",
-      ...(state.csrfToken ? { "x-csrf-token": state.csrfToken } : {}),
-      ...(options.headers || {}),
-    },
-  });
+function createRequestHeaders(options = {}) {
+  const hasExplicitContentType = Object.keys(options.headers || {}).some(
+    (key) => key.toLowerCase() === "content-type",
+  );
 
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(body.error || `HTTP ${res.status}`);
-  }
-
-  return body;
+  return {
+    ...(hasExplicitContentType ? {} : { "content-type": "application/json" }),
+    ...(state.csrfToken ? { "x-csrf-token": state.csrfToken } : {}),
+    ...(options.headers || {}),
+  };
 }
 
 async function ensureCsrf() {
-  const result = await request("/admin/auth/csrf", { method: "GET", headers: {} });
-  state.csrfToken = result.csrfToken;
+  const res = await fetch("/admin/auth/csrf", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok || !body?.csrfToken) {
+    throw new Error(body.error || `HTTP ${res.status}`);
+  }
+
+  state.csrfToken = body.csrfToken;
+}
+
+async function request(url, options = {}, allowCsrfRetry = true) {
+  const res = await fetch(url, {
+    credentials: "include",
+    ...options,
+    headers: createRequestHeaders(options),
+  });
+
+  const body = await res.json().catch(() => ({}));
+  if (res.ok) {
+    return body;
+  }
+
+  const errorMessage = body.error || `HTTP ${res.status}`;
+  const isCsrfError =
+    res.status === 403 &&
+    /(csrf token mismatch|missing csrf token)/i.test(String(errorMessage));
+
+  if (allowCsrfRetry && isCsrfError) {
+    await ensureCsrf();
+    return request(url, options, false);
+  }
+
+  throw new Error(errorMessage);
 }
 
 async function checkSession() {
@@ -243,6 +270,39 @@ async function checkSession() {
 function formatTime(iso) {
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString();
+}
+
+function formatStorageMode(storage) {
+  if (!storage || typeof storage !== "object") return "Unknown";
+
+  const useDatabase = Boolean(storage.useDatabase);
+  const driver = String(storage.driver || "").toLowerCase();
+
+  if (useDatabase || driver === "database") {
+    const dbName = storage.mongoDbName ? ` (${storage.mongoDbName})` : "";
+    return `Database${dbName}`;
+  }
+
+  return "File";
+}
+
+async function loadHealthSummary() {
+  const healthValue = $("#healthValue");
+  const storageModeValue = $("#storageModeValue");
+
+  try {
+    const health = await request("/api/health", { method: "GET" });
+    if (healthValue) {
+      healthValue.textContent =
+        String(health?.status || "").toLowerCase() === "ok" ? "Healthy" : "Degraded";
+    }
+    if (storageModeValue) {
+      storageModeValue.textContent = formatStorageMode(health?.storage);
+    }
+  } catch {
+    if (healthValue) healthValue.textContent = "Unknown";
+    if (storageModeValue) storageModeValue.textContent = "Unknown";
+  }
 }
 
 function sectionKeys() {
@@ -577,9 +637,9 @@ async function loadContent() {
   syncDirtySections();
   resetHistory(state.draftContent);
 
+  await loadHealthSummary();
   $("#sectionCount").textContent = String(Object.keys(state.content).length);
   $("#lastLoad").textContent = formatTime(result.fetchedAt || new Date().toISOString());
-  $("#healthValue").textContent = "Healthy";
 
   renderNav();
   renderEditors();
