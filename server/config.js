@@ -9,6 +9,7 @@ const AUDIT_PATH = process.env.AUDIT_FILE_PATH || path.join(__dirname, "data", "
 const ASSET_UPLOAD_DIR = process.env.ASSET_UPLOAD_DIR || path.join(ROOT_DIR, "assets", "uploads");
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || "";
 const BLOB_PREFIX = process.env.BLOB_ASSET_PREFIX || "portfolio-assets/";
+const BLOB_ACCESS = process.env.BLOB_STORE_ACCESS || "auto";
 const ENV = process.env.NODE_ENV || "development";
 const IS_PRODUCTION = ENV === "production";
 const STORAGE_DRIVER =
@@ -26,6 +27,7 @@ const config = {
     useBlob: Boolean(BLOB_TOKEN),
     blobToken: BLOB_TOKEN,
     blobPrefix: BLOB_PREFIX,
+    blobAccess: BLOB_ACCESS,
   },
   storage: {
     driver: STORAGE_DRIVER,

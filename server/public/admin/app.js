@@ -337,7 +337,7 @@ function renderAssetList() {
   assetList.innerHTML = state.assets
     .map((asset) => {
       const deleteButton = asset.deletable
-        ? `<button type="button" class="ghost danger" data-delete-asset-id="${escapeHtml(asset.id || "")}" data-delete-asset-source="${escapeHtml(asset.source || "")}" data-delete-asset-name="${escapeHtml(asset.name || "")}" data-delete-asset-url="${escapeHtml(asset.url || "")}">Delete</button>`
+        ? `<button type="button" class="ghost danger" data-delete-asset-id="${escapeHtml(asset.id || "")}" data-delete-asset-source="${escapeHtml(asset.source || "")}" data-delete-asset-name="${escapeHtml(asset.name || "")}" data-delete-asset-url="${escapeHtml(asset.url || "")}" data-delete-asset-raw-url="${escapeHtml(asset.rawUrl || "")}">Delete</button>`
         : "";
 
       return `<li><strong>${escapeHtml(asset.name)}</strong><span class="asset-list__meta">${escapeHtml(assetSourceLabel(asset.source))} • ${escapeHtml(asset.url)} • ${escapeHtml(formatBytes(asset.size))} • ${escapeHtml(formatTime(asset.uploadedAt))}</span><div class="asset-list__actions"><button type="button" class="ghost" data-copy-asset-url="${escapeHtml(asset.url)}">Copy URL</button>${deleteButton}</div></li>`;
@@ -411,6 +411,7 @@ async function deleteAsset(asset) {
         source: asset.source,
         name: asset.name,
         url: asset.url,
+        rawUrl: asset.rawUrl,
       }),
     });
     await loadAssets(true);
@@ -628,7 +629,7 @@ function renderPrimitiveField(section, path, value) {
   const fieldType = inferFieldType(value, path);
   const shouldSuggestAssets = typeof value === "string" && isLinkLikePath(path);
   const fieldHints = shouldSuggestAssets
-    ? ' list="assetUrlOptions" placeholder="Use /assets/uploads/... or https://..."'
+    ? ' list="assetUrlOptions" placeholder="Use /assets/... or https://..."'
     : "";
 
   if (typeof value === "boolean") {
@@ -1116,6 +1117,7 @@ assetList?.addEventListener("click", async (event) => {
       source: deleteButton.dataset.deleteAssetSource || "",
       name: deleteButton.dataset.deleteAssetName || "",
       url: deleteButton.dataset.deleteAssetUrl || "",
+      rawUrl: deleteButton.dataset.deleteAssetRawUrl || "",
       deletable: true,
     });
   }

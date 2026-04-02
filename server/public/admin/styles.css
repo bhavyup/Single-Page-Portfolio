@@ -258,6 +258,7 @@ button.ghost:hover {
   border: var(--panel-border);
   background: var(--bg);
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
   animation: panelReveal 0.32s cubic-bezier(0, 0, 0.2, 1);
 }
 
@@ -272,6 +273,8 @@ button.ghost:hover {
   background: var(--surface);
   display: grid;
   grid-template-rows: auto 1fr;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .brand {
@@ -288,6 +291,7 @@ button.ghost:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-height: 0;
 }
 
 .section-nav button {
@@ -313,9 +317,17 @@ button.ghost:hover {
 /* Workspace */
 .workspace {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   background: var(--bg);
   position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#dashboardPane {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .workspace-header {
@@ -514,9 +526,11 @@ button.ghost:hover {
 .pane-grid {
   display: none;
   height: 100%;
+  min-height: 0;
 }
 .editor-pane {
   height: 100%;
+  min-height: 0;
   display: none;
   grid-template-rows: auto 1fr auto;
   overflow: hidden;
@@ -540,6 +554,7 @@ button.ghost:hover {
 .form-scroll {
   padding: 2rem;
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* Editor Form Elements */

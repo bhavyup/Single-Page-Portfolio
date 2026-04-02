@@ -37,6 +37,7 @@ const bundledAssetDirs = [
 const blobPrefix = String(config.assets.blobPrefix || "portfolio-assets/")
   .replace(/^\/+/, "")
   .replace(/\/?$/, "/");
+const blobAccessMode = String(config.assets.blobAccess || "auto").toLowerCase();
 
 const allowedAssetExtensions = new Set([
   ".png",
@@ -89,6 +90,61 @@ function stripBlobPrefix(pathName) {
   }
 
   return normalized;
+}
+
+function encodeBlobUrl(blobUrl) {
+  return Buffer.from(String(blobUrl), "utf8").toString("base64url");
+}
+
+function decodeBlobUrl(encodedBlobUrl) {
+  return Buffer.from(String(encodedBlobUrl), "base64url").toString("utf8");
+}
+
+function shouldProxyBlobAssets() {
+  return blobAccessMode !== "public";
+}
+
+function toBlobClientUrl(blobUrl) {
+  if (!shouldProxyBlobAssets()) return blobUrl;
+  return `/assets/blob/${encodeURIComponent(encodeBlobUrl(blobUrl))}`;
+}
+
+function getBlobAccessAttemptOrder() {
+  if (blobAccessMode === "public") return ["public"];
+  if (blobAccessMode === "private") return ["private"];
+  return ["public", "private"];
+}
+
+function isPrivateStoreAccessError(error) {
+  return /cannot use public access on a private store/i.test(String(error?.message || ""));
+}
+
+async function putBlobWithAccessFallback(blobPath, fileBuffer, mimeType) {
+  const accessOrder = getBlobAccessAttemptOrder();
+  let lastError;
+
+  for (let i = 0; i < accessOrder.length; i += 1) {
+    const access = accessOrder[i];
+
+    try {
+      const blob = await put(blobPath, fileBuffer, {
+        access: /** @type {"public" | "private"} */ (access),
+        addRandomSuffix: false,
+        token: config.assets.blobToken,
+        contentType: mimeType || undefined,
+      });
+
+      return { blob, access };
+    } catch (error) {
+      lastError = error;
+      const isRetryCandidate = i < accessOrder.length - 1 && isPrivateStoreAccessError(error);
+      if (!isRetryCandidate) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError || new Error("Blob upload failed");
 }
 
 function isSupportedAssetFile(fileName) {
@@ -204,7 +260,8 @@ async function listBlobAssets() {
   return (response.blobs || []).map((blob) => ({
     id: `blob:${blob.url}`,
     name: stripBlobPrefix(blob.pathname || blob.url),
-    url: blob.url,
+    url: toBlobClientUrl(blob.url),
+    rawUrl: blob.url,
     size: blob.size || 0,
     uploadedAt: new Date(blob.uploadedAt || Date.now()).toISOString(),
     source: "blob",
@@ -358,6 +415,47 @@ app.get("/favicon.ico", (_req, res) => {
 
   res.setHeader("Cache-Control", "public, max-age=86400");
   return res.sendFile(faviconPath);
+});
+
+app.get("/assets/blob/:blobRef", async (req, res) => {
+  if (!config.assets.useBlob) {
+    return res.status(404).end();
+  }
+
+  let blobUrl;
+  try {
+    blobUrl = decodeBlobUrl(req.params.blobRef || "");
+  } catch {
+    return res.status(400).json({ error: "Invalid blob reference" });
+  }
+
+  if (!/^https:\/\//i.test(blobUrl) || !/blob\.vercel-storage\.com/i.test(blobUrl)) {
+    return res.status(400).json({ error: "Invalid blob url" });
+  }
+
+  try {
+    const upstream = await globalThis.fetch(blobUrl, {
+      headers: {
+        Authorization: `Bearer ${config.assets.blobToken}`,
+      },
+    });
+
+    if (!upstream.ok) {
+      return res.status(upstream.status).json({ error: "Blob fetch failed" });
+    }
+
+    const contentType = upstream.headers.get("content-type");
+    if (contentType) {
+      res.setHeader("Content-Type", contentType);
+    }
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+
+    const bodyBuffer = Buffer.from(await upstream.arrayBuffer());
+    return res.send(bodyBuffer);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 app.get("/api/health", (_req, res) => {
@@ -564,17 +662,17 @@ app.post("/admin/api/assets", requireCsrf, (req, res) => {
     try {
       if (config.assets.useBlob) {
         const blobPath = `${blobPrefix}${generatedName}`;
-        const blob = await put(blobPath, req.file.buffer, {
-          access: "public",
-          addRandomSuffix: false,
-          token: config.assets.blobToken,
-          contentType: req.file.mimetype || undefined,
-        });
+        const { blob, access } = await putBlobWithAccessFallback(
+          blobPath,
+          req.file.buffer,
+          req.file.mimetype,
+        );
 
         createdAsset = {
           id: `blob:${blob.url}`,
           name: stripBlobPrefix(blob.pathname || blobPath),
-          url: blob.url,
+          url: access === "public" ? blob.url : toBlobClientUrl(blob.url),
+          rawUrl: blob.url,
           size: req.file.size,
           uploadedAt: new Date().toISOString(),
           source: "blob",
@@ -628,6 +726,7 @@ app.delete("/admin/api/assets", requireCsrf, async (req, res) => {
   const id = String(req.body?.id || "");
   const name = String(req.body?.name || "");
   const url = String(req.body?.url || "");
+  const rawUrl = String(req.body?.rawUrl || "");
 
   try {
     if (source === "blob") {
@@ -636,6 +735,7 @@ app.delete("/admin/api/assets", requireCsrf, async (req, res) => {
       }
 
       const blobUrl =
+        rawUrl ||
         url ||
         (id.startsWith("blob:") ? id.slice("blob:".length) : "");
       if (!blobUrl) {
@@ -670,6 +770,7 @@ app.delete("/admin/api/assets", requireCsrf, async (req, res) => {
         id,
         name,
         url,
+        rawUrl,
       },
     });
   } catch {}
