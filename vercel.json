@@ -7,14 +7,16 @@
   },
   "rewrites": [
     {
-      "source": "/simple-calc/:match*",
-      "destination": "https://simple-calculator-orcin-five.vercel.app/:match*"
-    }
-  ],
-  "routes": [
+      "source": "/simple-calc",
+      "destination": "https://simple-calculator-orcin-five.vercel.app/"
+    },
     {
-      "src": "/(.*)",
-      "dest": "/api/index.js"
+      "source": "/simple-calc/:path*",
+      "destination": "https://simple-calculator-orcin-five.vercel.app/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.js"
     }
   ]
 }
