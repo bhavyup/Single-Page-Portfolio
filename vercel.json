@@ -5,6 +5,12 @@
       "includeFiles": "{index.html,script.js,styles.css,assets/**,logo/**,server/public/**,server/data/content.json}"
     }
   },
+  "rewrites": [
+    {
+      "source": "/simple-calc/:match*",
+      "destination": "https://simple-calculator-orcin-five.vercel.app/:match*"
+    }
+  ],
   "routes": [
     {
       "src": "/(.*)",

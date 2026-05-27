@@ -99,6 +99,9 @@
     if (iconName && (iconName.startsWith("fa-") || iconName.includes("devicon"))) {
       return `<i class="${escapeHtml(iconName)}"></i>`;
     }
+    if (iconName && (!iconName.startsWith("fa-") || !iconName.includes("devicon"))) {
+      return `<i class="fa-${escapeHtml(iconName)}"></i>`;
+    }
     // Default to arrow-right if 'arrow' or not specified
     if (!iconName || iconName === "arrow") {
       return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>`;
