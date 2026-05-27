@@ -406,6 +406,67 @@ button.ghost:hover {
   overflow-y: auto;
 }
 
+.sortable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.array-card {
+  background: var(--bg);
+  border: var(--panel-border);
+  padding: 0.25rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.array-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--accent);
+}
+
+.array-card__header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 1rem;
+}
+
+.array-card__handle {
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+.array-card__handle:active {
+  cursor: grabbing;
+}
+
+.array-card__title {
+  flex-grow: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  font-family: var(--font-display);
+}
+
+.array-card .inline-tools {
+  position: static;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+  background-color: var(--surface);
+  border: 1px dashed var(--accent);
+}
+
 /* Editor Form Elements */
 .field-group {
   border: var(--panel-border);

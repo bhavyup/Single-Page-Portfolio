@@ -55,6 +55,16 @@ const confirmMessage = $("#confirmMessage");
 const confirmCancelBtn = $("#confirmCancelBtn");
 const confirmOkBtn = $("#confirmOkBtn");
 
+const editModal = $("#editModal");
+const editModalTitle = $("#editModalTitle");
+const editModalBody = $("#editModalBody");
+const editModalCloseBtn = $("#editModalCloseBtn");
+const editModalCancelBtn = $("#editModalCancelBtn");
+const editModalSaveBtn = $("#editModalSaveBtn");
+
+// Track current edit
+let currentEditContext = null;
+
 const lastPublishedBtn = $("#lastPublishedBtn");
 const currentPublishedBtn = $("#currentPublishedBtn");
 const undoBtn = $("#undoBtn");
@@ -445,7 +455,17 @@ function sectionKeys() {
   return state.draftContent ? Object.keys(state.draftContent) : [];
 }
 
+const LABEL_OVERRIDES = {
+  "links": "Navigation Links",
+  "logoText": "Main Brand Text"
+  // Add any custom labels here: "jsonKeyName": "Your Display Label"
+};
+
 function pathLabel(segment) {
+  if (LABEL_OVERRIDES[segment]) {
+    return LABEL_OVERRIDES[segment];
+  }
+  
   return String(segment)
     .replace(/_/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -605,11 +625,29 @@ function addArrayItem(root, path) {
   const arr = getValueAtPath(root, path);
   if (!Array.isArray(arr)) return;
 
+  const key = String(path[path.length - 1] || "").toLowerCase();
+
   const sample = arr[0];
+  
+  if (key === "actions") {
+    return arr.push({ href: "", label: "New Action", type: "section", kind: "primary", icon: "arrow", download: false, targetBlank: false });
+  }
+
   if (typeof sample === "string") return arr.push("");
   if (typeof sample === "number") return arr.push(0);
   if (typeof sample === "boolean") return arr.push(false);
-  if (sample && typeof sample === "object") return arr.push(deepClone(sample));
+  if (sample && typeof sample === "object") {
+    // create a blank object with the same keys instead of purely cloning values
+    const blank = {};
+    for (const k in sample) {
+      if (typeof sample[k] === "string") blank[k] = "";
+      else if (typeof sample[k] === "boolean") blank[k] = false;
+      else if (typeof sample[k] === "number") blank[k] = 0;
+      else if (Array.isArray(sample[k])) blank[k] = [];
+      else blank[k] = null;
+    }
+    return arr.push(blank);
+  }
   arr.push("");
 }
 
@@ -620,6 +658,24 @@ function inferFieldType(value, path) {
   if (key.includes("email")) return "email";
   if (key.includes("url") || key.includes("href")) return "url";
   return "text";
+}
+
+function renderTagsField(section, path, tagsArray) {
+  const pathToken = encodePath(path);
+  const label = pathLabel(path[path.length - 1]);
+  
+  const tagsHtml = tagsArray.map((tag, index) => {
+      return `<span class="tag-badge">${escapeHtml(tag)}<button type="button" class="tag-badge__remove" data-remove-tag="${index}" data-path="${pathToken}" data-section="${section}" aria-label="Remove tag">&times;</button></span>`;
+  }).join("");
+
+  return `<div class="field-row tags-field-row" style="flex-direction: column; align-items: stretch; gap: 0.5rem;" data-tags-container="${pathToken}">
+      <label class="field-label">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label>
+      <div class="tags-list">
+          ${tagsHtml}
+      </div>
+      <input type="text" class="field-input" placeholder="Type tags and hit Enter or comma..." data-add-tag-input="${pathToken}" data-section="${section}" aria-label="Add new tags">
+      <div class="form-help" style="font-size: 0.75rem; color: var(--text-muted);">Separate tags with commas or press Enter</div>
+  </div>`;
 }
 
 function renderPrimitiveField(section, path, value) {
@@ -636,8 +692,23 @@ function renderPrimitiveField(section, path, value) {
     return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><select id="${fieldId}" class="field-select" data-path="${pathToken}" data-section="${section}"><option value="true" ${value ? "selected" : ""}>True</option><option value="false" ${!value ? "selected" : ""}>False</option></select></div>`;
   }
 
-  if (typeof value === "string" && value.length > 80) {
+  const lastKey = String(path[path.length - 1] || "").toLowerCase();
+
+  if (lastKey === "eyebrow" || (typeof value === "string" && value.length > 80)) {
     return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><textarea id="${fieldId}" class="field-textarea" data-path="${pathToken}" data-section="${section}">${escapeHtml(value)}</textarea></div>`;
+  }
+  // Special-case for 'kind' and 'type' fields
+  if (lastKey === "kind") {
+    const options = ["primary", "ghost"];
+    return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><select id="${fieldId}" class="field-select" data-path="${pathToken}" data-section="${section}">${options
+      .map((o) => `<option value="${o}" ${o === String(value) ? "selected" : ""}>${escapeHtml(o)}</option>`)
+      .join("")}</select></div>`;
+  }
+  if (lastKey === "type" && path.includes("actions")) {
+    const options = ["section", "external", "download"];
+    return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><select id="${fieldId}" class="field-select" data-path="${pathToken}" data-section="${section}">${options
+      .map((o) => `<option value="${o}" ${o === String(value) ? "selected" : ""}>${escapeHtml(o)}</option>`)
+      .join("")}</select></div>`;
   }
 
   return `<div class="field-row"><label class="field-label" for="${fieldId}">${escapeHtml(label)} ${makeInfoIcon(section, path)}</label><input id="${fieldId}" class="field-input" type="${fieldType}"${fieldHints} data-path="${pathToken}" data-section="${section}" value="${escapeHtml(value)}"></div>`;
@@ -646,24 +717,62 @@ function renderPrimitiveField(section, path, value) {
 function renderNode(section, path, node) {
   if (Array.isArray(node)) {
     const pathToken = encodePath(path);
-    const itemsHtml = node
-      .map((item, index) => {
-        const itemPath = [...path, index];
-        const itemToken = encodePath(itemPath);
-        return `<div class="array-item"><div class="inline-tools"><button type="button" class="ghost" data-remove-item="${itemToken}" data-section="${section}">Remove Item</button></div>${renderNode(section, itemPath, item)}</div>`;
-      })
-      .join("");
+    const isObjectArray = node.length > 0 && typeof node[0] === "object" && node[0] !== null;
 
-    return `<section class="field-group"><div class="array-header"><div class="field-legend">${escapeHtml(pathLabel(path[path.length - 1] || "Items"))} ${makeInfoIcon(section, path)}</div><button type="button" class="ghost" data-add-item="${pathToken}" data-section="${section}">Add Item</button></div><div class="array-items">${itemsHtml}</div></section>`;
+    // If it's an array of objects (like items, actions), render draggable cards
+    if (isObjectArray) {
+      const itemsHtml = node
+        .map((item, index) => {
+          const itemPath = [...path, index];
+          const itemToken = encodePath(itemPath);
+          const titleHint = item.title || item.name || item.kicker || item.label || item.value || `Item ${index + 1}`;
+
+          return `<div class="array-card" data-id="${index}">
+            <div class="array-card__header">
+              <span class="array-card__handle">☰</span>
+              <span class="array-card__title">${escapeHtml(titleHint)}</span>
+              <div class="inline-tools">
+                <button type="button" class="ghost" data-edit-item="${itemToken}" data-section="${section}">Edit</button>
+                <button type="button" class="ghost danger" data-remove-item="${itemToken}" data-section="${section}">Remove</button>
+              </div>
+            </div>
+            <!-- Data payload saved silently so drag-and-drop reconstructs correctly -->
+            <div class="array-card__body hidden" data-content></div>
+          </div>`;
+        })
+        .join("");
+
+      return `<section class="field-group"><div class="array-header"><div class="field-legend">${escapeHtml(pathLabel(path[path.length - 1] || "Items"))} ${makeInfoIcon(section, path)}</div><div class="array-controls"><button type="button" class="ghost" data-add-item="${pathToken}" data-section="${section}">Add Item</button></div></div><div class="array-items sortable-list" data-path="${pathToken}" data-section="${section}">${itemsHtml}</div></section>`;
+    } else {
+      // Primitive arrays: render inline row with input + remove button to save vertical space
+      const itemsHtml = node
+        .map((item, index) => {
+          const itemPath = [...path, index];
+          const itemToken = encodePath(itemPath);
+          const valueEsc = escapeHtml(String(item ?? ""));
+          return `<div class="array-item inline-row" data-id="${index}"><input class="field-input" data-path="${itemToken}" data-section="${section}" value="${valueEsc}"><div class="inline-tools"><button type="button" class="ghost danger" data-remove-item="${itemToken}" data-section="${section}">Remove</button></div></div>`;
+        })
+        .join("");
+
+      return `<section class="field-group"><div class="array-header"><div class="field-legend">${escapeHtml(pathLabel(path[path.length - 1] || "Items"))} ${makeInfoIcon(section, path)}</div><div class="array-controls"><button type="button" class="ghost" data-add-item="${pathToken}" data-section="${section}">Add Item</button></div></div><div class="array-items sortable-list" data-path="${pathToken}" data-section="${section}">${itemsHtml}</div></section>`;
+    }
   }
 
   if (node && typeof node === "object") {
     const entries = Object.entries(node)
-      .map(([key, value]) => renderNode(section, [...path, key], value))
+      // Skips 'number' and 'reverse' properties from the edit form
+      .filter(([key]) => key !== 'number' && key !== 'reverse')
+      // Custom handling for 'tags' specifically
+      .map(([key, value]) => {
+          if (key === 'tags' && Array.isArray(value)) {
+              return renderTagsField(section, [...path, key], value);
+          }
+          return renderNode(section, [...path, key], value);
+      })
       .join("");
 
     if (!path.length) return `<div>${entries}</div>`;
-    return `<section class="field-group"><div class="field-legend">${escapeHtml(pathLabel(path[path.length - 1]))} ${makeInfoIcon(section, path)}</div>${entries}</section>`;
+    return `<section class="field-group">${entries}</section>`;
   }
 
   return renderPrimitiveField(section, path, node);
@@ -673,15 +782,71 @@ function renderEditors() {
   const keys = sectionKeys();
   editorPanes.style.display = keys.length ? "grid" : "none";
 
+  // Preserve per-pane scroll positions to avoid jumping to top on re-render
+  const scrollMap = {};
+  $$(".form-scroll", editorPanes).forEach((el) => {
+    const key = el.getAttribute("data-form-scroll");
+    if (key) scrollMap[key] = el.scrollTop;
+  });
+
   editorPanes.innerHTML = keys
     .map((key) => {
       const active = key === state.activeSection ? "active" : "";
       const sectionNode = state.draftContent[key];
-      const dirtyText = state.dirtySections.has(key) ? "Draft pending" : "No local edits";
+      // const dirtyText = state.dirtySections.has(key) ? "Draft pending" : "No local edits";
 
-      return `<article class="editor-pane ${active}" data-pane="${key}"><div class="form-scroll" data-form-scroll="${key}">${renderNode(key, [], sectionNode)}</div><div class="editor-footer"><span class="status" data-status="${key}">${escapeHtml(dirtyText)}</span></div></article>`;
+      return `<article class="editor-pane ${active}" data-pane="${key}"><div class="form-scroll fancy-scrollbar" data-form-scroll="${key}">${renderNode(key, [], sectionNode)}</div></article>`;
     })
     .join("");
+
+  // Restore scroll positions
+  $$(".form-scroll", editorPanes).forEach((el) => {
+    const key = el.getAttribute("data-form-scroll");
+    if (key && typeof scrollMap[key] !== "undefined") el.scrollTop = scrollMap[key];
+  });
+
+  // Initialize Sortable on every sortable list
+  if (typeof window.Sortable !== "undefined") {
+    $$(".sortable-list", editorPanes).forEach((listEl) => {
+      window.Sortable.create(listEl, {
+        handle: isCardList(listEl) ? ".array-card__handle" : undefined,
+        animation: 150,
+        onEnd: (evt) => {
+          handleDragEnd(evt);
+        }
+      });
+    });
+  }
+}
+
+function isCardList(listEl) {
+  return !!listEl.querySelector(".array-card__handle");
+}
+
+function handleDragEnd(evt) {
+  const listEl = evt.from;
+  const section = listEl.dataset.section;
+  const pathToken = listEl.dataset.path;
+  if (!section || !pathToken) return;
+
+  const path = decodePath(pathToken);
+  const arrayRoot = getValueAtPath(state.draftContent[section], path);
+  if (!Array.isArray(arrayRoot)) return;
+
+  // Move in array
+  const oldIndex = evt.oldIndex;
+  const newIndex = evt.newIndex;
+  
+  if (oldIndex !== newIndex) {
+    const [movedItem] = arrayRoot.splice(oldIndex, 1);
+    arrayRoot.splice(newIndex, 0, movedItem);
+    
+    markSectionDirty(section);
+    captureHistoryNow();
+    renderEditors(); // Re-render to reflect new paths/tokens
+    setActiveSection(section);
+    showToast("Reordered item successfully.", "success");
+  }
 }
 
 function setActiveSection(key) {
@@ -762,8 +927,34 @@ async function loadContent() {
   state.previousPublished = previousPublishedPayload?.data || null;
   updatePublishedButtons();
 
+  function normalizeActions(obj) {
+    if (!obj) return;
+    if (Array.isArray(obj.actions)) {
+      obj.actions.forEach(act => {
+        if (typeof act !== 'object' || act === null) return;
+        if (!("type" in act)) {
+          if (act.download) act.type = "download";
+          else if (act.targetBlank) act.type = "external";
+          else act.type = "section";
+        }
+        if (!("kind" in act)) act.kind = "primary";
+        if (!("href" in act)) act.href = "";
+        if (!("label" in act)) act.label = "";
+        if (!("icon" in act)) act.icon = "arrow";
+        if (!("download" in act)) act.download = false;
+        if (!("targetBlank" in act)) act.targetBlank = false;
+      });
+    }
+    for (const key in obj) {
+      if (typeof obj[key] === "object") normalizeActions(obj[key]);
+    }
+  }
+
+  normalizeActions(state.content);
+
   const savedDraft = readSavedDraft();
   if (savedDraft?.data) {
+    normalizeActions(savedDraft.data);
     state.draftContent = deepClone(savedDraft.data);
     state.loadedDataset = "draft";
     setGlobalStatus(`Loaded saved draft snapshot (${formatTime(savedDraft.savedAt)})`);
@@ -772,6 +963,14 @@ async function loadContent() {
     state.draftContent = deepClone(result.data);
     state.loadedDataset = "currentPublished";
     setGlobalStatus("Synced with API");
+  }
+
+  // Force eyebrow to string if it was an array (for backward compatibility with old drafts)
+  if (state.draftContent?.hero?.eyebrow && Array.isArray(state.draftContent.hero.eyebrow)) {
+    state.draftContent.hero.eyebrow = state.draftContent.hero.eyebrow.join(' / ');
+  }
+  if (state.content?.hero?.eyebrow && Array.isArray(state.content.hero.eyebrow)) {
+    state.content.hero.eyebrow = state.content.hero.eyebrow.join(' / ');
   }
 
   syncDirtySections();
@@ -1016,21 +1215,58 @@ sectionNav?.addEventListener("click", (event) => {
   setActiveSection(target.dataset.section);
 });
 
-editorPanes?.addEventListener("input", (event) => {
+document.addEventListener("input", (event) => {
   const input = event.target.closest("[data-path][data-section]");
   if (!input) return;
 
+  // Ignore input if it's the tag adding field itself
+  if (event.target.hasAttribute('data-add-tag-input')) return;
+
   const section = input.dataset.section;
   const path = decodePath(input.dataset.path);
+  
+  // If we are currently editing an item in the modal window for THIS path...
+  // wait, the inputs in the modal will refer to the same paths! So they naturally update state.draftContent!
+  
   const sectionRoot = state.draftContent[section];
   const existing = getValueAtPath(sectionRoot, path);
   const nextValue = parseInputValue(input, existing);
   setValueAtPath(sectionRoot, path, nextValue);
+  
+  // If we're editing in a modal, don't mark as dirty/capture history until they hit Save?
+  // Or just live-update it. It's fine to live update it, but they might want "cancel".
+  // If we live update, "Cancel" means we have to restore an old clone.
+  
+  if (!editModal.classList.contains("hidden") && editModal.getAttribute("aria-hidden") !== "true") {
+      // we're in modal, just update the edit buffer or draft content?
+      // Since it's hooked to the same draftContent, Cancel would need a history revert. Let's just live update.
+  }
+  
   markSectionDirty(section);
   queueHistoryCapture();
 });
 
-editorPanes?.addEventListener("click", (event) => {
+document.addEventListener("click", (event) => {
+  const removeTagBtn = event.target.closest("[data-remove-tag]");
+  if (removeTagBtn) {
+      const section = removeTagBtn.dataset.section;
+      const path = decodePath(removeTagBtn.dataset.path);
+      const tagIndex = parseInt(removeTagBtn.dataset.removeTag, 10);
+      
+      const sectionRoot = state.draftContent[section];
+      const existingTags = getValueAtPath(sectionRoot, path) || [];
+      existingTags.splice(tagIndex, 1);
+      
+      setValueAtPath(sectionRoot, path, existingTags);
+      markSectionDirty(section);
+      captureHistoryNow();
+      
+      const parentHtml = renderTagsField(section, path, existingTags);
+      const parentDiv = removeTagBtn.closest('.tags-field-row');
+      if (parentDiv) parentDiv.outerHTML = parentHtml;
+      return;
+  }
+
   const addButton = event.target.closest("[data-add-item][data-section]");
   if (addButton) {
     const section = addButton.dataset.section;
@@ -1040,7 +1276,18 @@ editorPanes?.addEventListener("click", (event) => {
     captureHistoryNow();
     renderEditors();
     setActiveSection(section);
-    showToast("Array item added.", "success");
+    
+    // Automatically open the newly added item if it's an object array
+    const parentArray = getValueAtPath(state.draftContent[section], path);
+    const newIdx = parentArray.length - 1;
+    const isObjectArray = newIdx >= 0 && typeof parentArray[newIdx] === "object" && parentArray[newIdx] !== null;
+    
+    if (isObjectArray) {
+        const itemPath = [...path, newIdx];
+        openEditModal(section, itemPath, parentArray[newIdx]);
+    } else {
+        showToast("Array item added.", "success");
+    }
     return;
   }
 
@@ -1054,7 +1301,74 @@ editorPanes?.addEventListener("click", (event) => {
     renderEditors();
     setActiveSection(section);
     showToast("Array item removed.", "warn");
+    return;
   }
+  
+  const editButton = event.target.closest("[data-edit-item][data-section]");
+  if (editButton) {
+      const section = editButton.dataset.section;
+      const path = decodePath(editButton.dataset.editItem);
+      const itemNode = getValueAtPath(state.draftContent[section], path);
+      openEditModal(section, path, itemNode);
+  }
+});
+
+function openEditModal(section, path, node) {
+    // Clone the node so we can restore it on cancel
+    currentEditContext = {
+        section,
+        path,
+        originalValue: JSON.parse(JSON.stringify(node))
+    };
+    
+    const titleHint = node.title || node.name || node.kicker || node.label || node.value || (path[path.length - 2] ? path[path.length - 2] : "Item");
+    editModalTitle.textContent = "Edit " + titleHint;
+    
+    // We'll run renderNode, BUT since renderNode calls entries... actually, renderNode works perfectly for objects!
+    // Since it's an object, it will loop through the entries.
+    const formHtml = renderNode(section, path, node);
+    editModalBody.innerHTML = formHtml;
+    
+    editModal.removeAttribute("aria-hidden");
+    editModal.classList.add("is-open");
+}
+
+function closeEditModal(save = false) {
+    if (!currentEditContext) return;
+    
+    const { section, path, originalValue } = currentEditContext;
+    
+    if (!save) {
+        // Revert to original
+        setValueAtPath(state.draftContent[section], path, originalValue);
+        // We might want to remove it if it was a newly added item? 
+        // We'll ignore that edge case for now, or just let them delete it.
+        markSectionDirty(section);
+        captureHistoryNow();
+    }
+    
+    editModal.setAttribute("aria-hidden", "true");
+    editModal.classList.remove("is-open");
+    currentEditContext = null;
+    
+    // Always re-render to reflect updated titles safely
+    renderEditors();
+    setActiveSection(section);
+}
+
+[editModalCloseBtn, editModalCancelBtn].forEach(btn => {
+    btn?.addEventListener("click", () => closeEditModal(false));
+});
+
+editModalSaveBtn?.addEventListener("click", () => {
+    closeEditModal(true);
+    showToast("Item saved.", "success");
+});
+
+document.addEventListener("click", (evt) => {
+    if (evt.target.closest('[data-edit-cancel="true"]')) {
+        closeEditModal(false);
+    }
 });
 
 lastPublishedBtn?.addEventListener("click", loadLastPublishedToEditor);
@@ -1188,6 +1502,44 @@ confirmModal?.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", async (event) => {
+  // Handle adding tags inside the tags input
+  if (event.key === "Enter" || event.key === ",") {
+    const tagInput = event.target.closest("[data-add-tag-input]");
+    if (tagInput) {
+        event.preventDefault();
+        const tagsRaw = tagInput.value;
+        if (!tagsRaw.trim()) return;
+        
+        const section = tagInput.dataset.section;
+        const path = decodePath(tagInput.dataset.addTagInput);
+        const sectionRoot = state.draftContent[section];
+        
+        const existingTags = getValueAtPath(sectionRoot, path) || [];
+        const newTags = tagsRaw.split(",").map(t => t.trim()).filter(Boolean);
+        const mergedTags = Array.from(new Set([...existingTags, ...newTags]));
+        
+        setValueAtPath(sectionRoot, path, mergedTags);
+        markSectionDirty(section);
+        captureHistoryNow();
+        
+        tagInput.value = "";
+        
+        // Target specifically the tags container to avoid re-rendering entire screen
+        // which would close the input focus.
+        const parentHtml = renderTagsField(section, path, mergedTags);
+        const parentDiv = tagInput.closest('.tags-field-row');
+        if (parentDiv) parentDiv.outerHTML = parentHtml;
+        else renderEditors(); // Fallback
+        
+        // Regain focus on the new input after DOM update
+        setTimeout(() => {
+           const newTagInput = document.querySelector(`[data-add-tag-input="${encodePath(path)}"]`);
+           if (newTagInput) newTagInput.focus();
+        }, 10);
+        return;
+    }
+  }
+
   if (event.key === "Escape" && state.confirmResolver) {
     event.preventDefault();
     resolveConfirm(false);

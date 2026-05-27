@@ -134,7 +134,7 @@
                     <h2>Admin Mission Control</h2>
                 </div>
 
-                <nav id="sectionNav" class="section-nav"></nav>
+                <nav id="sectionNav" class="section-nav fancy-scrollbar"></nav>
             </aside>
 
             <section class="workspace">
@@ -149,7 +149,7 @@
                     <p class="status" id="globalStatus">Connected</p>
                 </header>
 
-                <div id="dashboardPane" class="pane pane--dashboard">
+                <div id="dashboardPane" class="pane pane--dashboard fancy-scrollbar">
                     <div class="cards">
                         <article class="card">
                             <p class="card__label">API Health</p>
@@ -178,7 +178,7 @@
                                 <button id="assetUploadBtn" type="submit">Upload Asset</button>
                             </form>
                             <p class="status asset-status" id="assetUploadHint">Allowed: images, videos, pdf/docs, txt, zip (max 25MB)</p>
-                            <ul class="asset-list fancy-scrollbar" id="assetList"></ul>
+                            <ul class="asset-list hide-scrollbar" id="assetList"></ul>
                         </section>
 
                         <div class="audit-block">
@@ -188,7 +188,7 @@
                     </div>
                 </div>
 
-                <div id="editorPanes" class="pane-grid"></div>
+                <div id="editorPanes" class="pane-grid fancy-scrollbar"></div>
             </section>
 
             <div class="confirm-modal" id="confirmModal" aria-hidden="true" role="dialog" aria-modal="true"
@@ -203,10 +203,34 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="confirm-modal" id="editModal" aria-hidden="true" role="dialog" aria-modal="true"
+                aria-labelledby="editModalTitle">
+                <div class="confirm-modal__backdrop" data-edit-cancel="true"></div>
+                <div class="confirm-modal__panel edit-modal-panel">
+                    <div style="padding: 1.5rem; border-bottom: 2px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--surface);">
+                        <h4 id="editModalTitle">Edit Item</h4>
+                        <button type="button" id="editModalCloseBtn" class="icon-btn ghost" aria-label="Close">
+                            <svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="3">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="editModalBody" class="form-scroll fancy-scrollbar" style="flex-grow: 1; overflow-y: auto; padding: 1.5rem; background: var(--bg);">
+                        <!-- Forms injected here -->
+                    </div>
+                    <div class="confirm-modal__actions">
+                        <button type="button" id="editModalCancelBtn" class="ghost">Cancel</button>
+                        <button type="button" id="editModalSaveBtn" class="primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
     <datalist id="assetUrlOptions"></datalist>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <script src="/admin/app.js"></script>
 </body>
 

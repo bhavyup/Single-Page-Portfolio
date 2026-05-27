@@ -351,13 +351,17 @@ const uploadAsset = multer({
 app.disable("x-powered-by");
 app.use(
   helmet({
+    xFrameOptions: false,
+    crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
+        "frame-ancestors": ["*"],
         "script-src": [
           "'self'",
           "https://kit.fontawesome.com",
           "https://cdnjs.cloudflare.com",
+          "https://cdn.jsdelivr.net",
         ],
         "style-src": [
           "'self'",

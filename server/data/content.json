@@ -53,10 +53,7 @@
     ]
   },
   "hero": {
-    "eyebrow": [
-      "Full-Stack Developer",
-      "Creative Engineer"
-    ],
+    "eyebrow": "Full-Stack Developer & Creative Engineer",
     "firstName": "Bhavy",
     "lastName": "Upreti",
     "taglineLines": [
@@ -67,12 +64,14 @@
       {
         "href": "#work",
         "label": "View Work",
-        "kind": "primary"
+        "kind": "primary",
+        "icon": "arrow"
       },
       {
         "href": "./assets/resume/NoLC Resume.pdf",
         "label": "Resume",
         "kind": "ghost",
+        "icon": "download",
         "download": true
       }
     ],
@@ -194,12 +193,14 @@
         "href": "https://www.linkedin.com/in/bhavy-upreti",
         "label": "Hire Me",
         "kind": "primary",
+        "icon": "external",
         "targetBlank": true
       },
       {
         "href": "./assets/resume/NoLC Resume.pdf",
         "label": "Download CV",
         "kind": "ghost",
+        "icon": "download",
         "download": true
       }
     ]
@@ -395,8 +396,8 @@
           "JavaScript",
           "Figma"
         ],
-        "liveDemo": "https://bhavyup.github.io/My-Portfolio/",
-        "sourceCode": "https://github.com/bhavyup/My-Portfolio",
+        "liveDemo": "/",
+        "sourceCode": "https://github.com/bhavyup/Single-Page-Portfolio",
         "placeholderSrc": "./assets/images/Portfolio.png",
         "placeholderAlt": "Portfolio Website Screenshot",
         "reverse": true

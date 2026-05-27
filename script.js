@@ -84,15 +84,37 @@
       .replace(/'/g, "&#39;");
   }
 
+  function getIconSvg(iconName, isDownload) {
+    if (iconName === "none" || iconName === false) return "";
+    
+    if (iconName === "download" || (!iconName && isDownload)) {
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>`;
+    }
+    if (iconName === "external") {
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+    }
+    if (iconName && (iconName.startsWith("<svg") || iconName.startsWith("<i"))) {
+      return iconName;
+    }
+    if (iconName && (iconName.startsWith("fa-") || iconName.includes("devicon"))) {
+      return `<i class="${escapeHtml(iconName)}"></i>`;
+    }
+    // Default to arrow-right if 'arrow' or not specified
+    if (!iconName || iconName === "arrow") {
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>`;
+    }
+    // Fallback: User typed something else (e.g., standard text/label)
+    return `<i class="${escapeHtml(iconName)}"></i>`;
+  }
+
   function renderActionButton(action) {
     const kindClass = action.kind === "ghost" ? "btn--ghost" : "btn--primary";
     const isDownload = action.download ? " download" : "";
     const target = action.targetBlank ? ' target="_blank" rel="noopener"' : "";
-    const icon = action.download
-      ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>`
-      : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>`;
+    
+    let iconSvg = getIconSvg(action.icon, action.download);
 
-    return `<a href="${escapeHtml(action.href)}" class="btn ${kindClass}"${target}${isDownload}><span>${escapeHtml(action.label)}</span>${icon}</a>`;
+    return `<a href="${escapeHtml(action.href)}" class="btn ${kindClass}"${target}${isDownload}><span>${escapeHtml(action.label)}</span>${iconSvg}</a>`;
   }
 
   function setSectionHeader(sectionId, sectionData) {
@@ -180,8 +202,27 @@
     if (portfolioData.hero) {
       const hero = portfolioData.hero;
       const heroEyebrow = $(".hero__eyebrow");
-      if (heroEyebrow && hero.eyebrow?.length >= 2) {
-        heroEyebrow.innerHTML = `<span>${escapeHtml(hero.eyebrow[0])}</span><span class="hero__eyebrow-sep">&amp;</span><span>${escapeHtml(hero.eyebrow[1])}</span>`;
+      if (heroEyebrow && hero.eyebrow) {
+        const text = String(hero.eyebrow);
+        let html = '';
+        let currentText = '';
+        // Wrap specific separator characters (&, /, |, +) in special styling
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          if (/[&/|+]/.test(char)) {
+            if (currentText) {
+              html += `<span>${escapeHtml(currentText)}</span>`;
+              currentText = '';
+            }
+            html += `<span class="hero__eyebrow-sep">${escapeHtml(char)}</span>`;
+          } else {
+            currentText += char;
+          }
+        }
+        if (currentText) {
+          html += `<span>${escapeHtml(currentText)}</span>`;
+        }
+        heroEyebrow.innerHTML = html;
       }
 
       const heroLines = $$(".hero__title-line");
@@ -207,7 +248,7 @@
         heroStats.innerHTML = hero.stats
           .map(
             (item, index) =>
-              `<div class="hero__stat"><span class="hero__stat-num">${escapeHtml(item.value)}</span><span class="hero__stat-label">${escapeHtml(item.label)}</span></div>${index < hero.stats.length - 1 ? '<div class="hero__stat-divider" aria-hidden="true"></div>' : ""}`,
+              `<div class="hero__stat"><span class="hero__stat-num">${escapeHtml(item.value)}</span><span class="hero__stat-label">${escapeHtml(item.label)}</span></div>`,
           )
           .join("");
       }
@@ -325,11 +366,21 @@
     if (portfolioData.work) {
       const projects = $("#projectsList");
       if (projects && portfolioData.work.projects?.length) {
+        const isGrid = portfolioData.work.projects.length > 3;
+        if (isGrid) {
+          projects.classList.add("projects--grid");
+        } else {
+          projects.classList.remove("projects--grid");
+        }
+
         projects.innerHTML = portfolioData.work.projects
-          .map(
-            (project) =>
-              `<article class="project${project.reverse ? " project--reverse" : ""}" data-reveal><a href="${escapeHtml(project.liveDemo)}" class="project__image" target="_blank" rel="noopener" data-demo-url="${escapeHtml(project.liveDemo)}" data-placeholder-src="${escapeHtml(project.placeholderSrc)}" data-placeholder-alt="${escapeHtml(project.placeholderAlt)}"><iframe class="project__preview" title="${escapeHtml(project.title)} live demo preview" loading="lazy" aria-hidden="true"></iframe><img src="${escapeHtml(project.placeholderSrc)}" alt="${escapeHtml(project.placeholderAlt)}" loading="lazy"><span class="project__image-overlay"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></span></a><div class="project__info"><span class="project__number">${escapeHtml(project.number)}</span><h3 class="project__title">${escapeHtml(project.title)}</h3><p class="project__desc">${escapeHtml(project.desc)}</p><div class="project__tags">${(project.tags || []).map((tag) => `<span class="project__tag">${escapeHtml(tag)}</span>`).join("")}</div><div class="project__links"><a href="${escapeHtml(project.liveDemo)}" target="_blank" rel="noopener" class="project__link">Live Demo<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a><a href="${escapeHtml(project.sourceCode)}" target="_blank" rel="noopener" class="project__link">Source Code<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a></div></div></article>`,
-          )
+          .map((project, index) => {
+            const isReverse = !isGrid && index % 2 !== 0;
+            // Hotfix: Force "Portfolio" project to use "/" for iframe to bypass cross-origin blocks
+            const demoUrl = (project.title && project.title.toLowerCase() === 'portfolio') ? "/" : project.liveDemo;
+            
+            return `<article class="project${isReverse ? " project--reverse" : ""}${isGrid ? " project--card" : ""}" data-reveal><a href="${escapeHtml(demoUrl)}" class="project__image" target="_blank" rel="noopener" data-demo-url="${escapeHtml(demoUrl)}" data-placeholder-src="${escapeHtml(project.placeholderSrc)}" data-placeholder-alt="${escapeHtml(project.placeholderAlt)}"><iframe class="project__preview" title="${escapeHtml(project.title)} live demo preview" loading="lazy" aria-hidden="true"></iframe><img src="${escapeHtml(project.placeholderSrc)}" alt="${escapeHtml(project.placeholderAlt)}" loading="lazy"><span class="project__image-overlay"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></span></a><div class="project__info"><span class="project__number">${escapeHtml(project.number)}</span><h3 class="project__title">${escapeHtml(project.title)}</h3><p class="project__desc">${escapeHtml(project.desc)}</p><div class="project__tags">${(project.tags || []).map((tag) => `<span class="project__tag">${escapeHtml(tag)}</span>`).join("")}</div><div class="project__links"><a href="${escapeHtml(project.liveDemo)}" target="_blank" rel="noopener" class="project__link">Live Demo<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a><a href="${escapeHtml(project.sourceCode)}" target="_blank" rel="noopener" class="project__link">Source Code<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a></div></div></article>`;
+          })
           .join("");
       }
 
