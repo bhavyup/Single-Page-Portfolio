@@ -352,7 +352,6 @@ app.disable("x-powered-by");
 app.use(
   helmet({
     xFrameOptions: false,
-    crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
